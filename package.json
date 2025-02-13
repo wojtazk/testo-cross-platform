@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "testownik",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -38,7 +38,7 @@
     "@vitejs/plugin-legacy": "^5.0.0",
     "@vitejs/plugin-react": "^4.0.1",
     "cypress": "^13.5.0",
-    "eslint": "^8.35.0",
+    "eslint": "9.20.1",
     "eslint-plugin-react": "^7.32.2",
     "jsdom": "^22.1.0",
     "terser": "^5.4.0",
@@ -46,5 +46,5 @@
     "vite": "~5.2.0",
     "vitest": "^0.34.6"
   },
-  "description": "An Ionic project"
+  "description": "Wieloplatformowa wersja testownika"
 }
