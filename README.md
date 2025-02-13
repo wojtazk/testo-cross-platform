@@ -9,4 +9,6 @@
 
 Ikona -> https://iconduck.com/icons/115336/game-boy-4
 
+Projet dedykuje [Rickowi](https://www.youtube.com/watch?v=dQw4w9WgXcQ) i [Rickiemu](https://www.youtube.com/watch?v=BJJeE56rhck) ❤️❤️❤️
+
 ---
