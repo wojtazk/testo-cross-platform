@@ -1,2 +1,3 @@
-# testo-cross-platform
-Wieloplatformowa wersja ukochanego testownika dla studentów debili z PWRu
+# Testownik wersja wieloplatformowa
+
+Student to jest debil!!!
