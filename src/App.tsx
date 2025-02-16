@@ -1,11 +1,14 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+'use client';
+import { Route } from 'react-router-dom';
+// import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonRouterOutlet, setupIonicReact } from '@ionic/react';
+// FIXME: fix this when ionic team closes the releated issue
+import { IonApp } from './ionic-react-ts-workaround';
 
 import { IonReactRouter } from '@ionic/react-router';
 
 import Home from './pages/Home';
 import Quiz from './pages/Quiz';
-import Tab2 from './pages/Tab2';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';

@@ -1,7 +1,0 @@
-{
-  "name": "Testownnik",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
