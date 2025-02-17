@@ -9,6 +9,7 @@ import { IonReactRouter } from '@ionic/react-router';
 
 import Home from './pages/Home';
 import Quiz from './pages/Quiz';
+import QuizStats from './pages/QuizStats';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -52,6 +53,7 @@ const App: React.FC = () => (
       <IonRouterOutlet animated>
         <Route exact path="/" render={() => <Home />} />
         <Route exact path="/quiz" render={() => <Quiz />} />
+        <Route exact path="/quiz/stats" render={() => <QuizStats />} />
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>

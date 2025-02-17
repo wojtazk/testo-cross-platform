@@ -1,6 +1,28 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
-ion-menu {
+
+/* set border radius on md */
+/* @media (min-height: 600px) {
+  .md {
+    --border-radius: 5em;
+  }
+} */
+
+/* center titles on md */
+.md ion-title {
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  height: 0;
+}
+
+/* increase ios toolbar height */
+/* .ios ion-toolbar {
+  --min-height: 56px;
+} */
+
+/* ion-menu {
   --min-width: 80%;
   --max-width: 90%;
-}
+} */
