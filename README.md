@@ -8,8 +8,13 @@
 
 Ikona -> https://iconduck.com/icons/115336/game-boy-4
 
+https://v2.tauri.app/start/prerequisites/
+
 ```sh
-npm run tauri icon ./public/favicon.svg  --  --ios-color "#555"
+npm install
+cargo install tauri-cli --version "^2.0.0" --locked
+cargo tauri android init
+cargo tauri icon ./public/favicon.svg --ios-color "#555"
 ```
 
 Projekt dedykuje [Rickowi](https://www.youtube.com/watch?v=dQw4w9WgXcQ) i [Rickiemu](https://www.youtube.com/watch?v=BJJeE56rhck) ❤️❤️❤️

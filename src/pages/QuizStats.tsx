@@ -13,7 +13,7 @@ const QuizStats: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>🕹️ Testownik 👾</IonTitle>
+          <IonTitle>🎮 Testownik 👾</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>

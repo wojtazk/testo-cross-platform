@@ -13,6 +13,7 @@ import {
 import { settingsOutline } from 'ionicons/icons';
 
 import './Home.css';
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   return (
@@ -20,28 +21,27 @@ const Home: React.FC = () => {
       <IonMenu type="overlay" side="end" contentId="main-content">
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Menu Content</IonTitle>
+            <IonTitle>Ustawienia</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          This is the menu
-          content.ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+          Ustawienia NotImplemented ... yet
         </IonContent>
       </IonMenu>
 
       <IonPage id="main-content">
         <IonHeader>
           <IonToolbar>
+            <IonTitle>🎮 Testownik 👾</IonTitle>
             <IonMenuToggle slot="end">
               <IonButton shape="round" fill="clear" color="dark">
                 <IonIcon slot="icon-only" icon={settingsOutline} />
               </IonButton>
             </IonMenuToggle>
-            <IonTitle>🕹️ Testownik 👾</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent class="ion-padding">
-          <p>Hello There</p>
+          <Link to="/quiz">Quiz</Link>
         </IonContent>
       </IonPage>
     </>

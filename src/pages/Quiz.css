@@ -1,0 +1,4 @@
+ion-progress-bar {
+  --progress-background: #39b54a;
+  --background: color-mix(in srgb, var(--progress-background) 25%, black);
+}
