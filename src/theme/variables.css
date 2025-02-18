@@ -18,11 +18,48 @@ http://ionicframework.com/docs/theming/ */
 }
 
 /* increase ios toolbar height */
-/* .ios ion-toolbar {
+:root.ios ion-toolbar {
   --min-height: 56px;
-} */
+}
 
-/* ion-menu {
-  --min-width: 80%;
-  --max-width: 90%;
-} */
+/* Dark mode adjustments */
+/* (https://ionicframework.com/docs/theming/dark-mode#system) */
+/* This sets a different item border color for the default theme on ios and md */
+:root {
+  --ion-item-border-color: var(--ion-background-color-step-200);
+}
+
+/* color scheme adjustment - scrollbars etc */
+:root {
+  color-scheme: light;
+}
+:root.ion-palette-dark {
+  color-scheme: dark;
+}
+
+/* This sets a different background and item background for the default theme on ios */
+:root.ios {
+  --ion-background-color: var(--ion-background-color-step-50, #f2f2f6);
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: #fff;
+}
+
+/* This sets a different background and item background for the default theme on md */
+:root.md {
+  --ion-background-color: var(--ion-background-color-step-100, #f3f3f3);
+  --ion-toolbar-background: var(--ion-background-color);
+  --ion-item-background: #fff;
+}
+
+/* This sets a different item background when dark mode is enabled on ios and md */
+.ion-palette-dark.ios {
+  --ion-item-background: #1c1c1d;
+}
+.ion-palette-dark.md {
+  --ion-item-background: #1f1f1f;
+}
+
+/* adjust modal color on ios */
+.ion-palette-dark.ios ion-modal {
+  --ion-item-background: var(--ion-background-color-step-150);
+}
