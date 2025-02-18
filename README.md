@@ -7,6 +7,7 @@
 # Testownik - wersja wieloplatformowa
 
 Ikona -> https://iconduck.com/icons/115336/game-boy-4
+generator ikon -> https://icon.kitchen/
 
 https://v2.tauri.app/start/prerequisites/
 
