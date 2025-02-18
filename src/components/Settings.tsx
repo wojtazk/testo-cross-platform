@@ -88,7 +88,7 @@ function Settings({
       <IonList inset>
         <IonItem>
           <IonLabel color="medium">
-            Liczba dodatkowych powtórzeń przy{' '}
+            Liczba dodatkowych powtórzeń w przypadku{' '}
             <span style={{ color: 'var(--ion-color-danger-shade)' }}>
               błędnej
             </span>{' '}
