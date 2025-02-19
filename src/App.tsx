@@ -40,11 +40,14 @@ import '@ionic/react/css/palettes/dark.class.css';
 /* Theme variables */
 import './theme/variables.css';
 
-setupIonicReact({
-  // force 'ios' or 'md' mode (mainly for development)
-  // mode: 'ios',
-  // mode: 'md',
-});
+// get user preffered UI style, id undefined ionic handles this
+// remove '"' because useLocalStorage hook adds them
+const mode = (localStorage.getItem('uimode')?.replace(/"/g, '') ||
+  undefined) as 'ios' | 'md' | undefined;
+
+const ionConfig: { mode?: 'ios' | 'md' } = { mode };
+
+setupIonicReact(ionConfig);
 
 const App: React.FC = () => (
   <IonApp>

@@ -5,6 +5,7 @@ import {
   IonLabel,
   IonList,
   IonListHeader,
+  IonNote,
   IonRadio,
   IonRadioGroup,
   IonRange,
@@ -13,26 +14,43 @@ import { text } from 'ionicons/icons';
 
 import './Settings.css';
 
+// types
+import { Theme, UIMode } from '../pages/Home';
 type SettingsProps = {
-  theme: 'system' | 'light' | 'dark';
-  setTheme: React.Dispatch<'system' | 'light' | 'dark'>;
-  toggleIonDarkPalette: Function;
+  theme: Theme;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  removeTheme: () => void;
+  toggleIonDarkPalette: (shouldAdd: boolean) => void;
+  UIMode: UIMode;
+  setUIMode: React.Dispatch<React.SetStateAction<UIMode>>;
+  removeUIMode: () => void;
 };
 
 function Settings({
-  theme = 'system',
+  theme,
   setTheme,
+  removeTheme,
   toggleIonDarkPalette,
+  UIMode,
+  setUIMode,
+  removeUIMode,
 }: SettingsProps) {
-  const handleThemeChange = (newTheme: 'system' | 'light' | 'dark') => {
-    setTheme(newTheme);
+  const handleThemeChange = (newTheme: Theme | 'system') => {
     if (newTheme === 'system') {
+      removeTheme();
       // Use matchMedia to check the user preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
       toggleIonDarkPalette(prefersDark.matches);
     } else {
+      setTheme(newTheme);
       toggleIonDarkPalette(newTheme === 'dark');
     }
+  };
+
+  const handleUIModeChange = (newUIMode: UIMode | 'default') => {
+    if (newUIMode === 'default') {
+      removeUIMode();
+    } else setUIMode(newUIMode);
   };
 
   return (
@@ -40,7 +58,7 @@ function Settings({
       <IonListHeader>Motyw</IonListHeader>
       <IonList inset>
         <IonRadioGroup
-          value={theme}
+          value={theme ? theme : 'system'}
           onIonChange={(event) => handleThemeChange(event.detail.value)}
         >
           <IonItem>
@@ -56,12 +74,22 @@ function Settings({
       </IonList>
 
       <IonListHeader>Styl Aplikacji</IonListHeader>
-      {/* FIXME */}
+      <IonNote class="ion-margin-horizontal">
+        Odśwież lub uruchom ponownie aplikację aby zobaczyć efekt
+      </IonNote>
       <IonList inset>
         <IonRadioGroup
-        //   value={theme}
-        //   onIonChange={(event) => handleThemeChange(event.detail.value)}
+          value={UIMode ? UIMode : 'default'}
+          onIonChange={(event) => handleUIModeChange(event.detail.value)}
         >
+          <IonItem>
+            <IonRadio value="default">
+              <IonLabel>Domyślny</IonLabel>
+              <IonNote>
+                Wszystko poza iOS domyślnie używa Material Design
+              </IonNote>
+            </IonRadio>
+          </IonItem>
           <IonItem>
             <IonRadio value="ios">iOS</IonRadio>
           </IonItem>
@@ -129,10 +157,10 @@ function Settings({
           <IonInput
             labelPlacement="stacked"
             type="number"
-            min="0"
+            min="1"
             max="20"
             step="1"
-            value="10"
+            value="6"
           />
         </IonItem>
       </IonList>

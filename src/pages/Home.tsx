@@ -24,13 +24,19 @@ import { cog, settingsOutline } from 'ionicons/icons';
 
 import './Home.css';
 import Settings from '../components/Settings';
+import { useLocalStorage } from 'usehooks-ts';
 
 // toggle "ion-palette-dark" class on the html element
 const toggleIonDarkPalette = (shouldAdd: boolean) => {
   document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
 };
 
+// Settings component types
+export type Theme = 'light' | 'dark' | undefined;
+export type UIMode = 'ios' | 'md' | undefined;
+
 const Home: React.FC = () => {
+  // ion modal setup
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
 
@@ -41,17 +47,19 @@ const Home: React.FC = () => {
     setPresentingElement(page.current);
   }, []);
 
-  // theme
-  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>('system');
+  // theme and ui style
+  const [theme, setTheme, removeTheme] = useLocalStorage<Theme>(
+    'theme',
+    undefined
+  );
+  const [UIMode, setUIMode, removeUIMode] = useLocalStorage<UIMode>(
+    'uimode',
+    undefined
+  );
 
   useEffect(() => {
-    // FIXME
-    // get user preferences from local storage
-  }, []);
-
-  useEffect(() => {
-    // NOTE: follow the system theme
-    if (theme !== 'system') return;
+    // follow the system theme
+    if (theme !== undefined) return;
 
     // Use matchMedia to check the user preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -101,7 +109,11 @@ const Home: React.FC = () => {
             <Settings
               theme={theme}
               setTheme={setTheme}
+              removeTheme={removeTheme}
               toggleIonDarkPalette={toggleIonDarkPalette}
+              UIMode={UIMode}
+              setUIMode={setUIMode}
+              removeUIMode={removeUIMode}
             />
           </IonContent>
         </IonModal>
@@ -109,7 +121,7 @@ const Home: React.FC = () => {
         <IonGrid fixed>
           <IonRow>
             <IonCol>
-              <IonListHeader>Otwórz</IonListHeader>
+              <IonListHeader>Otwórz Quiz</IonListHeader>
               <IonList lines="none" inset>
                 <IonItem>
                   <IonLabel>
