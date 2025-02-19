@@ -1,9 +1,9 @@
 [package]
-name = "Testownik"
+name = "testo-cross-platform"
 version = "0.1.0"
 description = "Wieloplatformowy testownik"
 authors = ["Wojciech Kowal"]
-license = "GPLv3"
+license = "MIT"
 repository = "https://github.com/wojtazk/testo-cross-platform"
 edition = "2021"
 rust-version = "1.77.2"
