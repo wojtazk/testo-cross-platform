@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0-rc",
-  "productName": "Testownik",
-  "version": "0.1.0",
-  "identifier": "app.testownik.cross-platform",
+  "productName": "testo-cross-platform",
+  "mainBinaryName": "Testownik",
+  "identifier": "app.cross-platform.testo",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -33,6 +33,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "copyright": "Copyright 2025 © Wojciech Kowal",
+    "shortDescription": "Wieloplatformowy Testownik",
+    "longDescription": "Wieloplatformowy Testownik",
     "android": {
       "minSdkVersion": 24
     }
