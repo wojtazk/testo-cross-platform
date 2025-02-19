@@ -34,6 +34,8 @@ const toggleIonDarkPalette = (shouldAdd: boolean) => {
 // Settings component types
 export type Theme = 'light' | 'dark' | undefined;
 export type UIMode = 'ios' | 'md' | undefined;
+export type Zoom = number;
+export type FontSize = number;
 
 const Home: React.FC = () => {
   // ion modal setup
@@ -76,6 +78,20 @@ const Home: React.FC = () => {
     };
   }, [theme]);
 
+  // app scale
+  const [zoom, setZoom] = useLocalStorage<Zoom>('zoom', 1);
+
+  useEffect(() => {
+    document.documentElement.style.zoom = `${100 * zoom}%`;
+  }, [zoom]);
+
+  // app font size
+  const [fontSize, setFontSize] = useLocalStorage<FontSize>('fontsize', 1);
+
+  useEffect(() => {
+    document.documentElement.style.fontSize = `${100 * fontSize}%`;
+  }, [fontSize]);
+
   return (
     <IonPage ref={page}>
       <IonHeader>
@@ -114,6 +130,10 @@ const Home: React.FC = () => {
               UIMode={UIMode}
               setUIMode={setUIMode}
               removeUIMode={removeUIMode}
+              zoom={zoom}
+              setZoom={setZoom}
+              fontSize={fontSize}
+              setFontSize={setFontSize}
             />
           </IonContent>
         </IonModal>

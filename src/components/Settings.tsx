@@ -10,12 +10,12 @@ import {
   IonRadioGroup,
   IonRange,
 } from '@ionic/react';
-import { text } from 'ionicons/icons';
+import { hardwareChipOutline, text } from 'ionicons/icons';
 
 import './Settings.css';
 
 // types
-import { Theme, UIMode } from '../pages/Home';
+import { FontSize, Theme, UIMode, Zoom } from '../pages/Home';
 type SettingsProps = {
   theme: Theme;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
@@ -24,6 +24,10 @@ type SettingsProps = {
   UIMode: UIMode;
   setUIMode: React.Dispatch<React.SetStateAction<UIMode>>;
   removeUIMode: () => void;
+  zoom: Zoom;
+  setZoom: React.Dispatch<React.SetStateAction<Zoom>>;
+  fontSize: FontSize;
+  setFontSize: React.Dispatch<React.SetStateAction<FontSize>>;
 };
 
 function Settings({
@@ -34,6 +38,10 @@ function Settings({
   UIMode,
   setUIMode,
   removeUIMode,
+  zoom,
+  setZoom,
+  fontSize,
+  setFontSize,
 }: SettingsProps) {
   const handleThemeChange = (newTheme: Theme | 'system') => {
     if (newTheme === 'system') {
@@ -99,16 +107,53 @@ function Settings({
         </IonRadioGroup>
       </IonList>
 
-      <IonListHeader>Rozmiar czcionki</IonListHeader>
-      {/* FIXME */}
+      <IonListHeader>Skala aplikacji</IonListHeader>
+      <IonNote class="ion-margin">{Math.round(zoom * 100)}%</IonNote>
       <IonList inset>
         <IonItem>
-          <IonRange value={50}>
+          <IonRange
+            value={zoom}
+            onIonChange={(event) => setZoom(event.detail.value as number)}
+            min={0.6}
+            max={1.6}
+            step={0.1}
+            ticks
+            snaps
+          >
+            <IonIcon
+              icon={hardwareChipOutline}
+              size="small"
+              slot="start"
+            ></IonIcon>
+            <IonIcon
+              icon={hardwareChipOutline}
+              size="large"
+              slot="end"
+            ></IonIcon>
+          </IonRange>
+        </IonItem>
+      </IonList>
+
+      <IonListHeader>Rozmiar Tekstu</IonListHeader>
+      <IonNote class="ion-margin">{Math.round(fontSize * 100)}%</IonNote>
+      <IonList inset>
+        <IonItem>
+          <IonRange
+            value={fontSize}
+            onIonChange={(event) => setFontSize(event.detail.value as number)}
+            min={0.6}
+            max={1.6}
+            step={0.1}
+            ticks
+            snaps
+          >
             <IonIcon icon={text} size="small" slot="start"></IonIcon>
             <IonIcon icon={text} size="large" slot="end"></IonIcon>
           </IonRange>
         </IonItem>
-        <IonItem>Never gonna give you up, Never gonna let you down</IonItem>
+        <IonItem>
+          <IonLabel>Never gonna give you up, Never gonna let you down</IonLabel>
+        </IonItem>
       </IonList>
 
       <IonListHeader>Quiz</IonListHeader>
