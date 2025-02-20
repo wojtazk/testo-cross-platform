@@ -12,6 +12,7 @@
   "dependencies": {
     "@ionic/react": "^8.4.3",
     "@ionic/react-router": "^8.4.3",
+    "@tauri-apps/api": "^2.2.0",
     "ionicons": "^7.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -42,7 +42,7 @@ import './theme/variables.css';
 
 // get user preffered UI style, id undefined ionic handles this
 // remove '"' because useLocalStorage hook adds them
-const mode = (localStorage.getItem('uimode')?.replace(/"/g, '') ||
+const mode = (localStorage.getItem('ui-mode')?.replace(/"/g, '') ||
   undefined) as 'ios' | 'md' | undefined;
 
 const ionConfig: { mode?: 'ios' | 'md' } = { mode };

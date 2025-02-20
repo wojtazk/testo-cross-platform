@@ -25,6 +25,7 @@ import { cog, settingsOutline } from 'ionicons/icons';
 import './Home.css';
 import Settings from '../components/Settings';
 import { useLocalStorage } from 'usehooks-ts';
+import { useDirectoryDragDrop } from '../utils/useDirectoryDragDrop';
 
 // toggle "ion-palette-dark" class on the html element
 const toggleIonDarkPalette = (shouldAdd: boolean) => {
@@ -52,14 +53,12 @@ const Home: React.FC = () => {
   );
 
   // ion modal setup
-  const modal = useRef<HTMLIonModalElement>(null);
-  const page = useRef(null);
-
+  const modalRef = useRef<HTMLIonModalElement>(null);
+  const pageRef = useRef(null);
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
-
   useEffect(() => {
-    setPresentingElement(page.current);
+    setPresentingElement(pageRef.current);
   }, []);
 
   // theme and ui style
@@ -68,7 +67,7 @@ const Home: React.FC = () => {
     undefined
   );
   const [UIMode, setUIMode, removeUIMode] = useLocalStorage<UIMode>(
-    'uimode',
+    'ui-mode',
     undefined
   );
   useEffect(() => {
@@ -90,7 +89,7 @@ const Home: React.FC = () => {
     };
   }, [theme]);
 
-  // app scale
+  // app zoom (scaling)
   const [zoom, setZoom] = useLocalStorage<Zoom>('zoom', 1);
   useEffect(() => {
     document.documentElement.style.zoom = `${100 * zoom}%`;
@@ -102,8 +101,27 @@ const Home: React.FC = () => {
     document.documentElement.style.fontSize = `${100 * fontSize}%`;
   }, [fontSize]);
 
+  // handle opening dragged dirs
+  // FIXME: implement oppening dragged dirs
+  const { draggingOver } = useDirectoryDragDrop((paths) => console.log(paths));
+  const dropZoneElementRef = useRef(null);
+  useEffect(() => {
+    if (!dropZoneElementRef.current) return;
+
+    const dropZoneElement = dropZoneElementRef.current as HTMLElement;
+    dropZoneElement.style.transition = 'transform 300ms, filter 100ms';
+
+    if (draggingOver) {
+      dropZoneElement.style.transform = 'scale(0.95)';
+      dropZoneElement.style.filter = 'brightness(1.3)';
+    } else {
+      dropZoneElement.style.transform = '';
+      dropZoneElement.style.filter = '';
+    }
+  }, [draggingOver]);
+
   return (
-    <IonPage ref={page}>
+    <IonPage ref={pageRef}>
       <IonHeader>
         <IonToolbar>
           <IonTitle>🎮 Testownik 👾</IonTitle>
@@ -116,8 +134,9 @@ const Home: React.FC = () => {
       </IonHeader>
 
       <IonContent>
+        {/* Settings modal */}
         <IonModal
-          ref={modal}
+          ref={modalRef}
           trigger="open-modal"
           presentingElement={presentingElement!}
         >
@@ -125,7 +144,7 @@ const Home: React.FC = () => {
             <IonToolbar>
               <IonTitle>Ustawienia</IonTitle>
               <IonButtons slot="end">
-                <IonButton onClick={() => modal.current?.dismiss()}>
+                <IonButton onClick={() => modalRef.current?.dismiss()}>
                   Zamknij
                 </IonButton>
               </IonButtons>
@@ -156,7 +175,7 @@ const Home: React.FC = () => {
 
         <IonGrid fixed>
           <IonRow>
-            <IonCol>
+            <IonCol ref={dropZoneElementRef}>
               <IonListHeader>Otwórz Quiz</IonListHeader>
               <IonList lines="none" inset>
                 <IonItem>
