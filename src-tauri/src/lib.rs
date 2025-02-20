@@ -3,6 +3,9 @@ pub fn run() {
     // initialize builder
     let mut tauri_builder = tauri::Builder::default();
 
+    // common plugins
+    tauri_builder = tauri_builder.plugin(tauri_plugin_fs::init());
+
     // desktop only plugins
     #[cfg(desktop)]
     {
