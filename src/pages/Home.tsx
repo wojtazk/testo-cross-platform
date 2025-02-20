@@ -32,12 +32,25 @@ const toggleIonDarkPalette = (shouldAdd: boolean) => {
 };
 
 // Settings component types
+export type QuizReps = number;
 export type Theme = 'light' | 'dark' | undefined;
 export type UIMode = 'ios' | 'md' | undefined;
 export type Zoom = number;
 export type FontSize = number;
 
 const Home: React.FC = () => {
+  // quiz settings
+  const [quizInitialReps, setQuizInitialReps] = useLocalStorage<QuizReps>(
+    'quiz-initial-reps',
+    2
+  );
+  const [quizWrongAnswerExtraReps, setQuizWrongAnswerExtraReps] =
+    useLocalStorage<QuizReps>('quiz-wrong-answer-extra-reps', 1);
+  const [quizMaxReps, setQuizMaxReps] = useLocalStorage<QuizReps>(
+    'quiz-max-reps',
+    6
+  );
+
   // ion modal setup
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
@@ -58,7 +71,6 @@ const Home: React.FC = () => {
     'uimode',
     undefined
   );
-
   useEffect(() => {
     // follow the system theme
     if (theme !== undefined) return;
@@ -80,14 +92,12 @@ const Home: React.FC = () => {
 
   // app scale
   const [zoom, setZoom] = useLocalStorage<Zoom>('zoom', 1);
-
   useEffect(() => {
     document.documentElement.style.zoom = `${100 * zoom}%`;
   }, [zoom]);
 
   // app font size
   const [fontSize, setFontSize] = useLocalStorage<FontSize>('fontsize', 1);
-
   useEffect(() => {
     document.documentElement.style.fontSize = `${100 * fontSize}%`;
   }, [fontSize]);
@@ -123,6 +133,12 @@ const Home: React.FC = () => {
           </IonHeader>
           <IonContent className="ion-padding">
             <Settings
+              quizInitialReps={quizInitialReps}
+              setQuizInitialReps={setQuizInitialReps}
+              quizWrongAnswerExtraReps={quizWrongAnswerExtraReps}
+              setQuizWrongAnswerExtraReps={setQuizWrongAnswerExtraReps}
+              quizMaxReps={quizMaxReps}
+              setQuizMaxReps={setQuizMaxReps}
               theme={theme}
               setTheme={setTheme}
               removeTheme={removeTheme}

@@ -15,8 +15,15 @@ import { hardwareChipOutline, text } from 'ionicons/icons';
 import './Settings.css';
 
 // types
-import { FontSize, Theme, UIMode, Zoom } from '../pages/Home';
+import { FontSize, QuizReps, Theme, UIMode, Zoom } from '../pages/Home';
+import { useRef } from 'react';
 type SettingsProps = {
+  quizInitialReps: QuizReps;
+  setQuizInitialReps: React.Dispatch<React.SetStateAction<QuizReps>>;
+  quizWrongAnswerExtraReps: QuizReps;
+  setQuizWrongAnswerExtraReps: React.Dispatch<React.SetStateAction<QuizReps>>;
+  quizMaxReps: QuizReps;
+  setQuizMaxReps: React.Dispatch<React.SetStateAction<QuizReps>>;
   theme: Theme;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   removeTheme: () => void;
@@ -31,6 +38,12 @@ type SettingsProps = {
 };
 
 function Settings({
+  quizInitialReps,
+  setQuizInitialReps,
+  quizWrongAnswerExtraReps,
+  setQuizWrongAnswerExtraReps,
+  quizMaxReps,
+  setQuizMaxReps,
   theme,
   setTheme,
   removeTheme,
@@ -43,6 +56,38 @@ function Settings({
   fontSize,
   setFontSize,
 }: SettingsProps) {
+  // quiz settings
+  // controlled inputs with ionic and react ... I hope that I am really dumb
+  const quizInitialRepsIonInputElement = useRef<HTMLIonInputElement>(null);
+  const quizWrongAnswerExtraRepsIonInputElement =
+    useRef<HTMLIonInputElement>(null);
+  const quizMaxRepsIonInputElement = useRef<HTMLIonInputElement>(null);
+
+  const handleQuizValuesChange = (
+    value: number,
+    setValue: React.Dispatch<React.SetStateAction<QuizReps>>,
+    inputRef: React.RefObject<HTMLIonInputElement | null>,
+    min: number,
+    max: number
+  ): void => {
+    let newValue: number = NaN;
+
+    if (value < min) {
+      setValue(min);
+      newValue = min;
+    } else if (value > max) {
+      setValue(max);
+      newValue = max;
+    } else {
+      setValue(value);
+      newValue = value;
+    }
+
+    if (inputRef.current) {
+      inputRef.current.value = newValue;
+    }
+  };
+
   const handleThemeChange = (newTheme: Theme | 'system') => {
     if (newTheme === 'system') {
       removeTheme();
@@ -63,6 +108,90 @@ function Settings({
 
   return (
     <>
+      <IonListHeader>Quiz</IonListHeader>
+      <IonList inset>
+        <IonItem>
+          <IonLabel color="medium">
+            Liczba dodatkowych powtórzeń w przypadku{' '}
+            <span style={{ color: 'var(--ion-color-danger-shade)' }}>
+              błędnej
+            </span>{' '}
+            odpowiedzi
+          </IonLabel>
+        </IonItem>
+
+        <IonItem>
+          <IonInput
+            labelPlacement="stacked"
+            type="number"
+            min="0"
+            max="20"
+            step="1"
+            value={quizWrongAnswerExtraReps}
+            ref={quizWrongAnswerExtraRepsIonInputElement}
+            onIonChange={(event) =>
+              handleQuizValuesChange(
+                Math.round(Number(event.target.value)),
+                setQuizWrongAnswerExtraReps,
+                quizWrongAnswerExtraRepsIonInputElement,
+                0,
+                20
+              )
+            }
+          />
+        </IonItem>
+      </IonList>
+      <IonList inset>
+        <IonItem>
+          <IonLabel color="medium">Wstępna liczba powtórzeń</IonLabel>
+        </IonItem>
+        <IonItem>
+          <IonInput
+            labelPlacement="stacked"
+            type="number"
+            min="1"
+            max="20"
+            step="1"
+            value={quizInitialReps}
+            ref={quizInitialRepsIonInputElement}
+            onIonChange={(event) =>
+              handleQuizValuesChange(
+                Math.round(Number(event.target.value)),
+                setQuizInitialReps,
+                quizInitialRepsIonInputElement,
+                1,
+                20
+              )
+            }
+          />
+        </IonItem>
+      </IonList>
+      <IonList inset>
+        <IonItem>
+          <IonLabel color="medium">Maksymalna liczba powtórzeń</IonLabel>
+        </IonItem>
+        <IonItem>
+          <IonInput
+            labelPlacement="stacked"
+            type="number"
+            min="1"
+            max="20"
+            step="1"
+            value={quizMaxReps}
+            ref={quizMaxRepsIonInputElement}
+            onIonChange={(event) => {
+              handleQuizValuesChange(
+                Math.round(Number(event.target.value)),
+                setQuizMaxReps,
+                quizMaxRepsIonInputElement,
+                1,
+                20
+              );
+            }}
+          />
+        </IonItem>
+      </IonList>
+
       <IonListHeader>Motyw</IonListHeader>
       <IonList inset>
         <IonRadioGroup
@@ -153,60 +282,6 @@ function Settings({
         </IonItem>
         <IonItem>
           <IonLabel>Never gonna give you up, Never gonna let you down</IonLabel>
-        </IonItem>
-      </IonList>
-
-      <IonListHeader>Quiz</IonListHeader>
-      {/* FIXME */}
-      <IonList inset>
-        <IonItem>
-          <IonLabel color="medium">
-            Liczba dodatkowych powtórzeń w przypadku{' '}
-            <span style={{ color: 'var(--ion-color-danger-shade)' }}>
-              błędnej
-            </span>{' '}
-            odpowiedzi
-          </IonLabel>
-        </IonItem>
-        <IonItem>
-          <IonInput
-            labelPlacement="stacked"
-            type="number"
-            min="0"
-            max="20"
-            step="1"
-            value="1"
-          />
-        </IonItem>
-      </IonList>
-      <IonList inset>
-        <IonItem>
-          <IonLabel color="medium">Wstępna liczba powtórzeń</IonLabel>
-        </IonItem>
-        <IonItem>
-          <IonInput
-            labelPlacement="stacked"
-            type="number"
-            min="1"
-            max="20"
-            step="1"
-            value="2"
-          />
-        </IonItem>
-      </IonList>
-      <IonList inset>
-        <IonItem>
-          <IonLabel color="medium">Maksymalna liczba powtórzeń</IonLabel>
-        </IonItem>
-        <IonItem>
-          <IonInput
-            labelPlacement="stacked"
-            type="number"
-            min="1"
-            max="20"
-            step="1"
-            value="6"
-          />
         </IonItem>
       </IonList>
     </>
