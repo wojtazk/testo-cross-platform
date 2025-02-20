@@ -52,11 +52,9 @@ http://ionicframework.com/docs/theming/ */
 }
 
 /* This sets a different item background when dark mode is enabled on ios and md */
-.ion-palette-dark.ios {
-  --ion-item-background: #1c1c1d;
-}
+.ion-palette-dark.ios,
 .ion-palette-dark.md {
-  --ion-item-background: #1f1f1f;
+  --ion-item-background: #1c1c1d;
 }
 
 /* adjust modal color on ios */
