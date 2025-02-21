@@ -40,25 +40,30 @@ import '@ionic/react/css/palettes/dark.class.css';
 /* Theme variables */
 import './theme/variables.css';
 
-// get user preffered UI style, id undefined ionic handles this
+import { AppContextProvider } from './AppContext';
+
+// get user preffered UI style, if undefined ionic handles this
 // remove '"' because useLocalStorage hook adds them
 const mode = (localStorage.getItem('ui-mode')?.replace(/"/g, '') ||
   undefined) as 'ios' | 'md' | undefined;
 
 const ionConfig: { mode?: 'ios' | 'md' } = { mode };
-
 setupIonicReact(ionConfig);
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet animated>
-        <Route exact path="/" render={() => <Home />} />
-        <Route exact path="/quiz" render={() => <Quiz />} />
-        <Route exact path="/quiz/stats" render={() => <QuizStats />} />
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  return (
+    <IonApp>
+      <AppContextProvider>
+        <IonReactRouter>
+          <IonRouterOutlet animated>
+            <Route exact path="/" render={() => <Home />} />
+            <Route exact path="/quiz" render={() => <Quiz />} />
+            <Route exact path="/quiz/stats" render={() => <QuizStats />} />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </AppContextProvider>
+    </IonApp>
+  );
+};
 
 export default App;

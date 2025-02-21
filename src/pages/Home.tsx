@@ -23,25 +23,15 @@ import { Link } from 'react-router-dom';
 import { cog, settingsOutline } from 'ionicons/icons';
 
 import './Home.css';
+
 import Settings from '../components/Settings';
-import { useDirectoryDragDrop } from '../utils/useDirectoryDragDrop';
-import { useQuizSettings } from '../utils/useQuizSettings';
-import { useThemeAndUIStyle } from '../utils/useThemeAndUIStyle';
-import { toggleIonDarkPalette } from '../utils/toggleIonDarkPalette';
-import { useAppZoom } from '../utils/useAppZoom';
-import { useAppFontSize } from '../utils/useAppFontSize';
+
+import { useDragDrop } from '../utils/useDragDrop';
+import { useAppContext } from '../AppContext';
+
+import { handleLoadQuizData } from '../utils/handleLoadQuizData';
 
 const Home: React.FC = () => {
-  // quiz settings
-  const {
-    quizInitialReps,
-    setQuizInitialReps,
-    quizWrongAnswerExtraReps,
-    setQuizWrongAnswerExtraReps,
-    quizMaxReps,
-    setQuizMaxReps,
-  } = useQuizSettings();
-
   // ion modal setup
   const modalRef = useRef<HTMLIonModalElement>(null);
   const pageRef = useRef(null);
@@ -51,19 +41,9 @@ const Home: React.FC = () => {
     setPresentingElement(pageRef.current);
   }, []);
 
-  // theme and ui style
-  const { theme, setTheme, removeTheme, UIMode, setUIMode, removeUIMode } =
-    useThemeAndUIStyle();
-
-  // app zoom (scaling)
-  const { zoom, setZoom } = useAppZoom();
-
-  // app font size
-  const { fontSize, setFontSize } = useAppFontSize();
-
-  // handle opening dragged dirs
+  // handle drag drop
   // FIXME: implement oppening dragged dirs
-  const { draggingOver } = useDirectoryDragDrop((paths) => console.log(paths));
+  const { draggingOver, draggedPath } = useDragDrop();
   const dropZoneElementRef = useRef(null);
   useEffect(() => {
     if (!dropZoneElementRef.current) return;
@@ -79,6 +59,21 @@ const Home: React.FC = () => {
       dropZoneElement.style.filter = '';
     }
   }, [draggingOver]);
+
+  // handle quiz openig
+  // get quiz settings
+  const { quizInitialReps } = useAppContext();
+  // handle dragged dirs
+  // FIXME:
+  useEffect(() => {
+    if (draggedPath === '') return;
+    if (location.pathname !== '/') return;
+
+    handleLoadQuizData(
+      { loadProgress: false, quizInitialReps },
+      draggedPath
+    ).then((data) => console.log(data));
+  }, [draggedPath]);
 
   return (
     <IonPage ref={pageRef}>
@@ -111,25 +106,7 @@ const Home: React.FC = () => {
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
-            <Settings
-              quizInitialReps={quizInitialReps}
-              setQuizInitialReps={setQuizInitialReps}
-              quizWrongAnswerExtraReps={quizWrongAnswerExtraReps}
-              setQuizWrongAnswerExtraReps={setQuizWrongAnswerExtraReps}
-              quizMaxReps={quizMaxReps}
-              setQuizMaxReps={setQuizMaxReps}
-              theme={theme}
-              setTheme={setTheme}
-              removeTheme={removeTheme}
-              toggleIonDarkPalette={toggleIonDarkPalette}
-              UIMode={UIMode}
-              setUIMode={setUIMode}
-              removeUIMode={removeUIMode}
-              zoom={zoom}
-              setZoom={setZoom}
-              fontSize={fontSize}
-              setFontSize={setFontSize}
-            />
+            <Settings />
           </IonContent>
         </IonModal>
 

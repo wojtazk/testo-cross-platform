@@ -15,53 +15,35 @@ import {
 import { useRef } from 'react';
 import { hardwareChipOutline, text } from 'ionicons/icons';
 
+import { useAppContext } from '../AppContext';
+
 import './Settings.css';
 
 // types
 import { QuizReps } from '../utils/useQuizSettings';
 import { Theme, UIMode } from '../utils/useThemeAndUIStyle';
-import { Zoom } from '../utils/useAppZoom';
-import { FontSize } from '../utils/useAppFontSize';
 
-type SettingsProps = {
-  quizInitialReps: number;
-  setQuizInitialReps: React.Dispatch<React.SetStateAction<QuizReps>>;
-  quizWrongAnswerExtraReps: QuizReps;
-  setQuizWrongAnswerExtraReps: React.Dispatch<React.SetStateAction<QuizReps>>;
-  quizMaxReps: QuizReps;
-  setQuizMaxReps: React.Dispatch<React.SetStateAction<QuizReps>>;
-  theme: Theme;
-  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
-  removeTheme: () => void;
-  toggleIonDarkPalette: (shouldAdd: boolean) => void;
-  UIMode: UIMode;
-  setUIMode: React.Dispatch<React.SetStateAction<UIMode>>;
-  removeUIMode: () => void;
-  zoom: Zoom;
-  setZoom: React.Dispatch<React.SetStateAction<Zoom>>;
-  fontSize: FontSize;
-  setFontSize: React.Dispatch<React.SetStateAction<FontSize>>;
-};
+function Settings() {
+  const {
+    quizInitialReps,
+    setQuizInitialReps,
+    quizWrongAnswerExtraReps,
+    setQuizWrongAnswerExtraReps,
+    quizMaxReps,
+    setQuizMaxReps,
+    theme,
+    setTheme,
+    removeTheme,
+    toggleIonDarkPalette,
+    UIMode,
+    setUIMode,
+    removeUIMode,
+    zoom,
+    setZoom,
+    fontSize,
+    setFontSize,
+  } = useAppContext();
 
-function Settings({
-  quizInitialReps,
-  setQuizInitialReps,
-  quizWrongAnswerExtraReps,
-  setQuizWrongAnswerExtraReps,
-  quizMaxReps,
-  setQuizMaxReps,
-  theme,
-  setTheme,
-  removeTheme,
-  toggleIonDarkPalette,
-  UIMode,
-  setUIMode,
-  removeUIMode,
-  zoom,
-  setZoom,
-  fontSize,
-  setFontSize,
-}: SettingsProps) {
   // quiz settings
   // controlled inputs with ionic and react ... I hope that I am really dumb
   const quizInitialRepsIonInputElement = useRef<HTMLIonInputElement>(null);
