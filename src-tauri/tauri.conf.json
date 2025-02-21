@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0-rc",
-  "productName": "testo-cross-platform",
-  "mainBinaryName": "Testownik",
+  "productName": "Testownik",
+  "mainBinaryName": "testo-cross-platform",
   "identifier": "app.cross-platform.testo",
   "build": {
     "frontendDist": "../dist",
@@ -15,6 +15,7 @@
         "title": "Testownik",
         "width": 800,
         "height": 600,
+        "minHeight": 20,
         "resizable": true,
         "fullscreen": false,
         "dragDropEnabled": true

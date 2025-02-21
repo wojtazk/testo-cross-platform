@@ -8,6 +8,9 @@ export const useDragDrop = () => {
 
   useEffect(() => {
     const unlistenPromise = getCurrentWebview().onDragDropEvent((event) => {
+      // allow drag and drop only on initial app view
+      if (location.pathname !== '/') return;
+
       if (event.payload.type === 'over') {
         setDraggingOver(true);
       } else if (event.payload.type === 'drop') {

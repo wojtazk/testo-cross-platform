@@ -47,6 +47,7 @@ const Home: React.FC = () => {
   const dropZoneElementRef = useRef(null);
   useEffect(() => {
     if (!dropZoneElementRef.current) return;
+    if (location.pathname !== '/') return;
 
     const dropZoneElement = dropZoneElementRef.current as HTMLElement;
     dropZoneElement.style.transition = 'transform 300ms, filter 100ms';
@@ -92,6 +93,7 @@ const Home: React.FC = () => {
         {/* Settings modal */}
         <IonModal
           ref={modalRef}
+          keepContentsMounted
           trigger="open-modal"
           presentingElement={presentingElement!}
         >
