@@ -24,33 +24,23 @@ import { cog, settingsOutline } from 'ionicons/icons';
 
 import './Home.css';
 import Settings from '../components/Settings';
-import { useLocalStorage } from 'usehooks-ts';
 import { useDirectoryDragDrop } from '../utils/useDirectoryDragDrop';
-
-// toggle "ion-palette-dark" class on the html element
-const toggleIonDarkPalette = (shouldAdd: boolean) => {
-  document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
-};
-
-// Settings component types
-export type QuizReps = number;
-export type Theme = 'light' | 'dark' | undefined;
-export type UIMode = 'ios' | 'md' | undefined;
-export type Zoom = number;
-export type FontSize = number;
+import { useQuizSettings } from '../utils/useQuizSettings';
+import { useThemeAndUIStyle } from '../utils/useThemeAndUIStyle';
+import { toggleIonDarkPalette } from '../utils/toggleIonDarkPalette';
+import { useAppZoom } from '../utils/useAppZoom';
+import { useAppFontSize } from '../utils/useAppFontSize';
 
 const Home: React.FC = () => {
   // quiz settings
-  const [quizInitialReps, setQuizInitialReps] = useLocalStorage<QuizReps>(
-    'quiz-initial-reps',
-    2
-  );
-  const [quizWrongAnswerExtraReps, setQuizWrongAnswerExtraReps] =
-    useLocalStorage<QuizReps>('quiz-wrong-answer-extra-reps', 1);
-  const [quizMaxReps, setQuizMaxReps] = useLocalStorage<QuizReps>(
-    'quiz-max-reps',
-    6
-  );
+  const {
+    quizInitialReps,
+    setQuizInitialReps,
+    quizWrongAnswerExtraReps,
+    setQuizWrongAnswerExtraReps,
+    quizMaxReps,
+    setQuizMaxReps,
+  } = useQuizSettings();
 
   // ion modal setup
   const modalRef = useRef<HTMLIonModalElement>(null);
@@ -62,44 +52,14 @@ const Home: React.FC = () => {
   }, []);
 
   // theme and ui style
-  const [theme, setTheme, removeTheme] = useLocalStorage<Theme>(
-    'theme',
-    undefined
-  );
-  const [UIMode, setUIMode, removeUIMode] = useLocalStorage<UIMode>(
-    'ui-mode',
-    undefined
-  );
-  useEffect(() => {
-    // follow the system theme
-    if (theme !== undefined) return;
-
-    // Use matchMedia to check the user preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    toggleIonDarkPalette(prefersDark.matches);
-
-    const setDarkPaletteFromMediaQuery = (mediaQuery: MediaQueryListEvent) => {
-      toggleIonDarkPalette(mediaQuery.matches);
-    };
-    // Listen for changes to the prefers-color-scheme media query
-    prefersDark.addEventListener('change', setDarkPaletteFromMediaQuery);
-
-    return () => {
-      prefersDark.removeEventListener('change', setDarkPaletteFromMediaQuery);
-    };
-  }, [theme]);
+  const { theme, setTheme, removeTheme, UIMode, setUIMode, removeUIMode } =
+    useThemeAndUIStyle();
 
   // app zoom (scaling)
-  const [zoom, setZoom] = useLocalStorage<Zoom>('zoom', 1);
-  useEffect(() => {
-    document.documentElement.style.zoom = `${100 * zoom}%`;
-  }, [zoom]);
+  const { zoom, setZoom } = useAppZoom();
 
   // app font size
-  const [fontSize, setFontSize] = useLocalStorage<FontSize>('fontsize', 1);
-  useEffect(() => {
-    document.documentElement.style.fontSize = `${100 * fontSize}%`;
-  }, [fontSize]);
+  const { fontSize, setFontSize } = useAppFontSize();
 
   // handle opening dragged dirs
   // FIXME: implement oppening dragged dirs

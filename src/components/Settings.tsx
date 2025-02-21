@@ -1,4 +1,5 @@
 import {
+  IonButton,
   IonIcon,
   IonInput,
   IonItem,
@@ -10,15 +11,20 @@ import {
   IonRadioGroup,
   IonRange,
 } from '@ionic/react';
+
+import { useRef } from 'react';
 import { hardwareChipOutline, text } from 'ionicons/icons';
 
 import './Settings.css';
 
 // types
-import { FontSize, QuizReps, Theme, UIMode, Zoom } from '../pages/Home';
-import { useRef } from 'react';
+import { QuizReps } from '../utils/useQuizSettings';
+import { Theme, UIMode } from '../utils/useThemeAndUIStyle';
+import { Zoom } from '../utils/useAppZoom';
+import { FontSize } from '../utils/useAppFontSize';
+
 type SettingsProps = {
-  quizInitialReps: QuizReps;
+  quizInitialReps: number;
   setQuizInitialReps: React.Dispatch<React.SetStateAction<QuizReps>>;
   quizWrongAnswerExtraReps: QuizReps;
   setQuizWrongAnswerExtraReps: React.Dispatch<React.SetStateAction<QuizReps>>;
@@ -282,6 +288,25 @@ function Settings({
         </IonItem>
         <IonItem>
           <IonLabel>Never gonna give you up, Never gonna let you down</IonLabel>
+        </IonItem>
+      </IonList>
+
+      <IonListHeader>Reset</IonListHeader>
+      <IonList inset>
+        <IonItem>
+          <IonLabel>Zresetuj aplikacji</IonLabel>
+          <IonButton
+            slot="end"
+            color="danger"
+            fill="outline"
+            size="small"
+            onClick={() => {
+              localStorage.clear();
+              location.reload();
+            }}
+          >
+            Reset
+          </IonButton>
         </IonItem>
       </IonList>
     </>

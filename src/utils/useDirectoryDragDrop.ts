@@ -12,8 +12,8 @@ export const useDirectoryDragDrop = (
       if (event.payload.type === 'over') {
         setDraggingOver(true);
       } else if (event.payload.type === 'drop') {
-        setDraggingOver(false);
         handleDirectoryDragDrop(event.payload.paths);
+        setDraggingOver(false);
       } else {
         setDraggingOver(false);
       }
