@@ -294,7 +294,7 @@ function Settings({
       <IonListHeader>Reset</IonListHeader>
       <IonList inset>
         <IonItem>
-          <IonLabel>Zresetuj aplikacji</IonLabel>
+          <IonLabel>Zresetuj aplikacje</IonLabel>
           <IonButton
             slot="end"
             color="danger"
