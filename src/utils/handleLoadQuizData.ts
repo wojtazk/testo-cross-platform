@@ -24,6 +24,10 @@ type SaveJSONType = {
   reoccurrences: { tag: string; value: number }[];
 };
 
+type Images = {
+  [key: string]: string;
+};
+
 export const handleLoadQuizData = async (options: Options, path: string) => {
   const pathExists = await exists(path);
   if (!pathExists) {
@@ -34,7 +38,7 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
   const metadata = await stat(path);
   // only allow opening dirs
   if (metadata.isFile) {
-    console.error('Opening files not supported');
+    console.error(`Not a directory: ${path}`);
     return;
   }
 
@@ -58,20 +62,22 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
     }
   });
 
-  // FIXME: convert all to Promise.all
-
   // read image binary data and convert it to base64
-  const images: any = {};
-  imageFiles.forEach(async (imageFile) => {
-    const imageBinary = await readFile(await join(path, imageFile.name));
+  const images = (async () => {
+    const images = {} as Images;
+    for (const imageFile of imageFiles) {
+      const imageBinary = await readFile(await join(path, imageFile.name));
 
-    // convert to Base64
-    const imageBase64 = btoa(
-      imageBinary.reduce((data, byte) => data + String.fromCharCode(byte), '')
-    );
+      // convert to Base64
+      const imageBase64 = btoa(
+        imageBinary.reduce((data, byte) => data + String.fromCharCode(byte), '')
+      );
 
-    images[imageFile.name] = imageBase64;
-  });
+      images[imageFile.name] = imageBase64;
+    }
+
+    return images;
+  })();
 
   // parse files into quiz questions
   const questions = Promise.all(
@@ -91,8 +97,9 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
     })
   );
 
-  // check if save file exists
+  // get the save.json
   let saveJSON = (async () => {
+    // check if save file exists
     const saveFilePath = await join(path, 'save.json');
     const saveFileExists = await exists(saveFilePath);
 
@@ -130,5 +137,9 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
     return saveJSON;
   })();
 
-  return { saveJSON: await saveJSON, questions: await questions, images };
+  return {
+    saveJSON: await saveJSON,
+    questions: await questions,
+    images: await images,
+  };
 };

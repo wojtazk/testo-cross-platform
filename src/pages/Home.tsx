@@ -73,7 +73,9 @@ const Home: React.FC = () => {
     handleLoadQuizData(
       { loadProgress: false, quizInitialReps },
       draggedPath
-    ).then((data) => console.log(data));
+    ).then((data) => {
+      console.log(data);
+    });
   }, [draggedPath]);
 
   return (
@@ -82,7 +84,7 @@ const Home: React.FC = () => {
         <IonToolbar>
           <IonTitle>🎮 Testownik 👾</IonTitle>
           <IonButtons slot="end">
-            <IonButton id="open-modal">
+            <IonButton id="open-modal" aria-label="menu">
               <IonIcon slot="icon-only" ios={cog} md={settingsOutline} />
             </IonButton>
           </IonButtons>
