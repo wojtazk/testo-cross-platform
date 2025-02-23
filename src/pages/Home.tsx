@@ -18,7 +18,7 @@ import {
 } from '@ionic/react';
 
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { cog, settingsOutline } from 'ionicons/icons';
 
@@ -62,6 +62,7 @@ const Home: React.FC = () => {
   }, [draggingOver]);
 
   // handle quiz openig
+  const history = useHistory();
   // get quiz settings
   const { quizInitialReps } = useAppContext();
   // handle dragged dirs
@@ -70,11 +71,14 @@ const Home: React.FC = () => {
     if (draggedPath === '') return;
     if (location.pathname !== '/') return;
 
+    // FIXME: check if save.json exists
+
     handleLoadQuizData(
       { loadProgress: false, quizInitialReps },
       draggedPath
-    ).then((data) => {
-      console.log(data);
+    ).then((quizData) => {
+      console.log(quizData);
+      history.push('/quiz');
     });
   }, [draggedPath]);
 
