@@ -1,11 +1,13 @@
 type QuestionX = {
   tag: string; // name of the file
+  reoccurrences: number;
   type: 'X';
   content: string;
   answers: { content: string; correct: boolean }[];
 };
 type QuestionY = {
   tag: string;
+  reoccurrences: number;
   type: 'Y';
   content: string;
   // list of options and index of the correct one
@@ -13,7 +15,11 @@ type QuestionY = {
 };
 export type Question = QuestionX | QuestionY;
 
-export const parseQuizQuestion = (fileName: string, lines: string[]) => {
+export const parseQuizQuestion = (
+  fileName: string,
+  reoccurrences: number,
+  lines: string[]
+) => {
   const questionObj = {} as Question;
   const firstLine = lines[0];
 
@@ -23,6 +29,7 @@ export const parseQuizQuestion = (fileName: string, lines: string[]) => {
 
   // common part of X and Y questions
   questionObj.tag = fileName;
+  questionObj.reoccurrences = reoccurrences;
   questionObj.type = firstLine[0];
   questionObj.content = lines[1];
   questionObj.answers = [];

@@ -9,23 +9,23 @@ import {
 import { join } from '@tauri-apps/api/path';
 import { parseQuizQuestion } from './parseQuizQuestion';
 
-type Options = {
-  loadProgress?: boolean;
-  quizInitialReps: number;
-};
-
-type SaveJSONType = {
+export type SaveJSONType = {
   location: string; // directory path
   numberOfQuestions: number;
   numberOfBadAnswers: number;
   numberOfCorrectAnswers: number;
   numberOfLearnedQuestions: number;
   time: number;
-  reoccurrences: { tag: string; value: number }[];
+  reoccurrences: { tag: string; value: number }[] | [];
 };
 
-type Images = {
+export type Images = {
   [key: string]: string;
+};
+
+type Options = {
+  loadProgress?: boolean;
+  quizInitialReps: number;
 };
 
 export const handleLoadQuizData = async (options: Options, path: string) => {
@@ -62,6 +62,43 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
     }
   });
 
+  // get the save.json
+  const saveJSON = (async () => {
+    let saveJSON: SaveJSONType | null = null;
+    // try to parse save.json
+    if (options.loadProgress) {
+      // get save.json file path
+      const saveJSONPath = await join(path, 'save.json');
+      if (await exists(saveJSONPath)) {
+        try {
+          saveJSON = JSON.parse(
+            await readTextFile(saveJSONPath)
+          ) as SaveJSONType;
+          // update save.json location
+          saveJSON.location = path;
+          // update number of questions (possibly loaded new ones)
+          saveJSON.numberOfQuestions = questionFiles.length;
+        } catch (err) {
+          console.warn('Error while parsing save.json\n', err);
+        }
+      }
+    }
+    // create new save.json if its null
+    if (saveJSON === null) {
+      saveJSON = {
+        location: path,
+        numberOfQuestions: questionFiles.length,
+        numberOfBadAnswers: 0,
+        numberOfCorrectAnswers: 0,
+        numberOfLearnedQuestions: 0,
+        time: 0,
+        reoccurrences: [], // unnecessary when creating new save.json
+      };
+    }
+
+    return saveJSON;
+  })();
+
   // read image binary data and convert it to base64
   const images = (async () => {
     const images = {} as Images;
@@ -92,50 +129,19 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
         .map((line) => line.trim())
         .filter((line) => line !== '');
 
+      // get question reoccurrences
+      let questionReoccurrences = options.quizInitialReps;
+      if (options.loadProgress) {
+        questionReoccurrences =
+          (await saveJSON).reoccurrences.find(
+            (item) => item.tag === questionFile.name
+          )?.value ?? options.quizInitialReps;
+      }
+
       // parse into X and Y questions
-      return parseQuizQuestion(questionFile.name, lines);
+      return parseQuizQuestion(questionFile.name, questionReoccurrences, lines);
     })
   );
-
-  // get the save.json
-  let saveJSON = (async () => {
-    // check if save file exists
-    const saveFilePath = await join(path, 'save.json');
-    const saveFileExists = await exists(saveFilePath);
-
-    let saveJSON: SaveJSONType | null = null;
-
-    // try to parse save.json
-    if (options.loadProgress) {
-      if (saveFileExists) {
-        try {
-          saveJSON = JSON.parse(
-            await readTextFile(saveFilePath)
-          ) as SaveJSONType;
-          // update save.json location
-          saveJSON.location = path;
-        } catch (err) {
-          console.warn('Error while parsing save.json\n', err);
-        }
-      }
-    }
-    // create new save.json if its null
-    if (saveJSON === null) {
-      saveJSON = {
-        location: path,
-        numberOfQuestions: questionFiles.length,
-        numberOfBadAnswers: 0,
-        numberOfCorrectAnswers: 0,
-        numberOfLearnedQuestions: 0,
-        time: 0,
-        reoccurrences: questionFiles.map((question) => {
-          return { tag: question.name, value: options.quizInitialReps };
-        }),
-      };
-    }
-
-    return saveJSON;
-  })();
 
   return {
     saveJSON: await saveJSON,
