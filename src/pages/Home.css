@@ -1,0 +1,8 @@
+/* hide left overflowing part of the label */
+ion-col ion-label.text-nowrap {
+  direction: rtl;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

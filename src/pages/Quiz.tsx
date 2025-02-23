@@ -24,11 +24,27 @@ import {
   statsChart,
   trash,
 } from 'ionicons/icons';
+
 import './Quiz.css';
+
+import { useAppContext } from '../AppContext';
+// import { writeTextFile } from '@tauri-apps/plugin-fs';
 
 const Quiz: React.FC = () => {
   const history = useHistory();
-  false;
+
+  const { quizState } = useAppContext();
+  console.log(quizState); // FIXME
+
+  // FIXME: file write test
+  // useEffect(() => {
+  //   writeTextFile(
+  //     'C:\\Users\\Kowal\\Desktop\\New folder\\test_test.txt',
+  //     'Hello There'
+  //   );
+  // });
+
+  // popover menu
   const popoverElement = useRef<HTMLIonPopoverElement>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
@@ -46,14 +62,13 @@ const Quiz: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={() => history.goBack()}>
+            <IonButton aria-label="go back" onClick={() => history.goBack()}>
               <IonIcon slot="icon-only" ios={chevronBack} md={arrowBack} />
             </IonButton>
           </IonButtons>
-          {/* FIXME: */}
-          <IonTitle>Opanowane: 34 / 100</IonTitle>
+          <IonTitle>{`Opanowane: ${quizState.saveJSON.numberOfLearnedQuestions} / ${quizState.saveJSON.numberOfQuestions}`}</IonTitle>
           <IonButtons slot="end">
-            <IonButton onClick={openPopover}>
+            <IonButton aria-label="popover menu" onClick={openPopover}>
               <IonIcon
                 slot="icon-only"
                 ios={ellipsisHorizontal}
@@ -100,7 +115,14 @@ const Quiz: React.FC = () => {
         </IonPopover>
       </IonHeader>
       <IonContent>
-        <IonProgressBar value={0.34} />
+        <IonProgressBar
+          aria-label="liczba opanowanych pytań"
+          value={
+            quizState.saveJSON.numberOfLearnedQuestions /
+            quizState.saveJSON.numberOfQuestions
+          }
+        />
+        {/* FIXME: */}
         <p>Quiz</p>
       </IonContent>
     </IonPage>

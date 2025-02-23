@@ -28,8 +28,10 @@ import Settings from '../components/Settings';
 
 import { useDragDrop } from '../utils/useDragDrop';
 import { useAppContext } from '../AppContext';
-
 import { handleLoadQuizData } from '../utils/handleLoadQuizData';
+
+// types
+import { QuizState } from '../utils/useQuizState';
 
 const Home: React.FC = () => {
   // ion modal setup
@@ -63,6 +65,7 @@ const Home: React.FC = () => {
 
   // handle quiz openig
   const history = useHistory();
+  const { quizState, dispatchQuizState } = useAppContext();
   // get quiz settings
   const { quizInitialReps } = useAppContext();
   // handle dragged dirs
@@ -74,10 +77,14 @@ const Home: React.FC = () => {
     // FIXME: check if save.json exists
 
     handleLoadQuizData(
-      { loadProgress: false, quizInitialReps },
+      { loadProgress: true, quizInitialReps },
       draggedPath
     ).then((quizData) => {
-      console.log(quizData);
+      dispatchQuizState({
+        type: 'SET_STATE',
+        payload: quizData as QuizState,
+      });
+
       history.push('/quiz');
     });
   }, [draggedPath]);
@@ -119,6 +126,24 @@ const Home: React.FC = () => {
         </IonModal>
 
         <IonGrid fixed>
+          <IonRow>
+            {quizState.saveJSON.location && (
+              <IonCol>
+                <IonListHeader>Kontynuuj Quiz</IonListHeader>
+                <IonList lines="none" inset>
+                  <IonItem
+                    button
+                    aria-label="kontynuuj quiz"
+                    onClick={() => history.push('/quiz')}
+                  >
+                    <IonLabel color="medium" class="text-nowrap">
+                      {quizState.saveJSON.location}
+                    </IonLabel>
+                  </IonItem>
+                </IonList>
+              </IonCol>
+            )}
+          </IonRow>
           <IonRow>
             <IonCol ref={dropZoneElementRef}>
               <IonListHeader>Otwórz Quiz</IonListHeader>

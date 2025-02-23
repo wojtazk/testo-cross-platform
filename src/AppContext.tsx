@@ -5,12 +5,14 @@ import { useThemeAndUIStyle } from './utils/useThemeAndUIStyle';
 import { toggleIonDarkPalette } from './utils/toggleIonDarkPalette';
 import { useAppZoom } from './utils/useAppZoom';
 import { useAppFontSize } from './utils/useAppFontSize';
+import { useQuizState } from './utils/useQuizState';
 
 // types
 import { QuizReps } from './utils/useQuizSettings';
 import { Theme, UIMode } from './utils/useThemeAndUIStyle';
 import { Zoom } from './utils/useAppZoom';
 import { FontSize } from './utils/useAppFontSize';
+import { QuizState, QuizStateDispatchAction } from './utils/useQuizState';
 
 // app context types
 export type AppContextValues = {
@@ -31,6 +33,8 @@ export type AppContextValues = {
   setZoom: React.Dispatch<React.SetStateAction<Zoom>>;
   fontSize: FontSize;
   setFontSize: React.Dispatch<React.SetStateAction<FontSize>>;
+  quizState: QuizState;
+  dispatchQuizState: React.ActionDispatch<[action: QuizStateDispatchAction]>;
 };
 
 // context
@@ -58,6 +62,9 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
   // app font size
   const { fontSize, setFontSize } = useAppFontSize();
 
+  // quiz state
+  const { quizState, dispatchQuizState } = useQuizState();
+
   return (
     <AppContext.Provider
       value={{
@@ -78,6 +85,8 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
         setZoom,
         fontSize,
         setFontSize,
+        quizState,
+        dispatchQuizState,
       }}
     >
       {children}
