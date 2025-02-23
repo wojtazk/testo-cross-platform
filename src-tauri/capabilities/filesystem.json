@@ -3,5 +3,5 @@
   "identifier": "filesystem",
   "description": "Enables fs plugin",
   "windows": ["main"],
-  "permissions": ["fs:default", "fs:allow-app-read"]
+  "permissions": ["fs:allow-app-read", "fs:allow-app-write"]
 }
