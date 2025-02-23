@@ -50,6 +50,23 @@ const mode = (localStorage.getItem('ui-mode')?.replace(/"/g, '') ||
 const ionConfig: { mode?: 'ios' | 'md' } = { mode };
 setupIonicReact(ionConfig);
 
+// disable context menu and refresh shortcuts
+// FIXME: enable me later
+// document.addEventListener('keydown', function (event) {
+//   // F5 or ctrl+ (windows/linux), command+R (mac)
+//   if (
+//     event.key === 'F5' ||
+//     (event.ctrlKey && event.key === 'r') ||
+//     (event.metaKey && event.key === 'r')
+//   ) {
+//     event.preventDefault();
+//   }
+// });
+
+// document.addEventListener('contextmenu', function (event) {
+//   event.preventDefault();
+// });
+
 const App: React.FC = () => {
   return (
     <IonApp>
