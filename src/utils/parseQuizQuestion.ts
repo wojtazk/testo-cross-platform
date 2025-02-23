@@ -11,9 +11,10 @@ type QuestionY = {
   // list of options and index of the correct one
   answers: { content: string[]; correct: number }[];
 };
+export type Question = QuestionX | QuestionY;
 
 export const parseQuizQuestion = (fileName: string, lines: string[]) => {
-  const questionObj = {} as QuestionX | QuestionY;
+  const questionObj = {} as Question;
   const firstLine = lines[0];
 
   // check if question is valid
@@ -27,7 +28,6 @@ export const parseQuizQuestion = (fileName: string, lines: string[]) => {
   questionObj.answers = [];
 
   // parse X (X0010 etc)
-  // FIXME: replace images inside the questions and answers contents
   if (questionObj.type === 'X') {
     for (let i = 1; i < firstLine.length; i++) {
       questionObj.answers.push({
