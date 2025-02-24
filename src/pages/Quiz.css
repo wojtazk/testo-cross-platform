@@ -10,3 +10,19 @@
 ion-popover ion-content ion-list ion-item ion-icon {
   color: var(--ion-color-dark);
 } */
+ion-chip {
+  --background: var(--ion-item-background);
+}
+
+#question-content {
+  text-align: justify;
+  text-align-last: center;
+}
+
+#question-answers ion-item {
+  text-align: center;
+}
+
+#quiz-footer ion-chip {
+  cursor: text;
+}

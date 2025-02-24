@@ -51,6 +51,11 @@ ion-progress-bar {
   --ion-item-border-color: var(--ion-background-color-step-200);
 }
 
+/* adjust text color */
+:root.ion-palette-dark {
+  --ion-text-color: #cbcbcb;
+}
+
 /* color scheme adjustment - scrollbars etc */
 :root {
   color-scheme: light;
@@ -61,14 +66,14 @@ ion-progress-bar {
 
 /* This sets a different background and item background for the default theme on ios */
 :root.ios {
-  --ion-background-color: var(--ion-background-color-step-50, #f2f2f6);
+  --ion-background-color: var(--ion-background-color-step-50, #efefef);
   --ion-toolbar-background: var(--ion-background-color);
   --ion-item-background: #fff;
 }
 
 /* This sets a different background and item background for the default theme on md */
 :root.md {
-  --ion-background-color: var(--ion-background-color-step-100, #f3f3f3);
+  --ion-background-color: var(--ion-background-color-step-100, #efefef);
   --ion-toolbar-background: var(--ion-background-color);
   --ion-item-background: #fff;
 }
