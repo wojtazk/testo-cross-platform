@@ -24,7 +24,7 @@ import { cog, settingsOutline } from 'ionicons/icons';
 
 import './Home.css';
 
-import Settings from '../components/Settings';
+import { Settings } from '../components/Settings';
 
 import { useDragDrop } from '../utils/useDragDrop';
 import { useAppContext } from '../AppContext';

@@ -12,7 +12,7 @@ import {
   IonRange,
 } from '@ionic/react';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { hardwareChipOutline, text } from 'ionicons/icons';
 
 import { useAppContext } from '../AppContext';
@@ -23,7 +23,7 @@ import './Settings.css';
 import { QuizReps } from '../utils/useQuizSettings';
 import { Theme, UIMode } from '../utils/useThemeAndUIStyle';
 
-function Settings() {
+export const Settings: React.FC = () => {
   const {
     quizInitialReps,
     setQuizInitialReps,
@@ -200,7 +200,7 @@ function Settings() {
 
       <IonListHeader>Styl Aplikacji</IonListHeader>
       <IonNote class="ion-margin-horizontal">
-        Odśwież lub uruchom ponownie aplikację aby zobaczyć efekt
+        Uruchom ponownie aplikację aby zobaczyć efekt
       </IonNote>
       <IonList inset>
         <IonRadioGroup
@@ -210,9 +210,7 @@ function Settings() {
           <IonItem>
             <IonRadio value="default">
               <IonLabel>Domyślny</IonLabel>
-              <IonNote>
-                Wszystko poza iOS domyślnie używa Material Design
-              </IonNote>
+              <IonNote>iOS na iPhone/iPad, Android na innych</IonNote>
             </IonRadio>
           </IonItem>
           <IonItem>
@@ -293,5 +291,4 @@ function Settings() {
       </IonList>
     </>
   );
-}
-export default Settings;
+};
