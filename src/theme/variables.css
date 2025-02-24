@@ -17,6 +17,28 @@ http://ionicframework.com/docs/theming/ */
   height: 0;
 }
 
+.md ion-list-header {
+  font-size: 130%;
+}
+
+/* set background of progress bar color to be mixed with black or white */
+ion-progress-bar {
+  --background: color-mix(in srgb, var(--progress-background) 40%, white);
+}
+
+.ion-palette-dark ion-progress-bar {
+  --background: color-mix(in srgb, var(--progress-background) 40%, black);
+}
+
+:root.md {
+  --ion-color-primary: #39b54a;
+  --ion-color-primary-rgb: 57, 181, 74;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #329f41;
+  --ion-color-primary-tint: #4dbc5c;
+}
+
 /* increase ios toolbar height */
 :root.ios ion-toolbar {
   --min-height: 56px;

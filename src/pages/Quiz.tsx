@@ -76,6 +76,13 @@ const Quiz: React.FC = () => {
               />
             </IonButton>
           </IonButtons>
+          <IonProgressBar
+            aria-label="liczba opanowanych pytań"
+            value={
+              quizState.saveJSON.numberOfLearnedQuestions /
+              quizState.saveJSON.numberOfQuestions
+            }
+          />
         </IonToolbar>
         <IonPopover
           ref={popoverElement}
@@ -108,20 +115,15 @@ const Quiz: React.FC = () => {
                   aria-hidden="true"
                   icon={trash}
                 />
-                <IonLabel color="danger">Zresetuj progress</IonLabel>
+                <IonLabel color="danger">
+                  <b> Zresetuj progress</b>
+                </IonLabel>
               </IonItem>
             </IonList>
           </IonContent>
         </IonPopover>
       </IonHeader>
       <IonContent>
-        <IonProgressBar
-          aria-label="liczba opanowanych pytań"
-          value={
-            quizState.saveJSON.numberOfLearnedQuestions /
-            quizState.saveJSON.numberOfQuestions
-          }
-        />
         {/* FIXME: */}
         <p>Quiz</p>
       </IonContent>

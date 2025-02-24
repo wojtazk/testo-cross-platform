@@ -15,12 +15,18 @@ import {
   IonCol,
   IonLabel,
   IonListHeader,
+  IonProgressBar,
 } from '@ionic/react';
 
 import { useState, useEffect, useRef } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { cog, settingsOutline } from 'ionicons/icons';
+import {
+  cog,
+  folderOpenOutline,
+  folderOutline,
+  settingsOutline,
+} from 'ionicons/icons';
 
 import './Home.css';
 
@@ -56,7 +62,7 @@ const Home: React.FC = () => {
 
     if (draggingOver) {
       dropZoneElement.style.transform = 'scale(0.95)';
-      dropZoneElement.style.filter = 'brightness(1.3)';
+      dropZoneElement.style.filter = 'brightness(1.2)';
     } else {
       dropZoneElement.style.transform = '';
       dropZoneElement.style.filter = '';
@@ -133,13 +139,22 @@ const Home: React.FC = () => {
                 <IonList lines="none" inset>
                   <IonItem
                     button
+                    detail
                     aria-label="kontynuuj quiz"
                     onClick={() => history.push('/quiz')}
                   >
-                    <IonLabel color="medium" class="text-nowrap">
+                    <IonIcon icon={folderOpenOutline} slot="start" />
+                    <IonLabel class="text-nowrap">
                       {quizState.saveJSON.location}
                     </IonLabel>
                   </IonItem>
+                  <IonProgressBar
+                    aria-label="liczba opanowanych pytań"
+                    value={
+                      quizState.saveJSON.numberOfLearnedQuestions /
+                      quizState.saveJSON.numberOfQuestions
+                    }
+                  />
                 </IonList>
               </IonCol>
             )}
@@ -148,10 +163,9 @@ const Home: React.FC = () => {
             <IonCol ref={dropZoneElementRef}>
               <IonListHeader>Otwórz Quiz</IonListHeader>
               <IonList lines="none" inset>
-                <IonItem>
-                  <IonLabel>
-                    <Link to="/quiz">Quiz</Link>
-                  </IonLabel>
+                <IonItem button detail aria-label="otwórz quiz">
+                  <IonIcon icon={folderOutline} slot="start" />
+                  <IonLabel>Wybierz lub upuść folder</IonLabel>
                 </IonItem>
               </IonList>
             </IonCol>
@@ -160,13 +174,16 @@ const Home: React.FC = () => {
             <IonCol>
               <IonListHeader>Ostatnio używane</IonListHeader>
               <IonList inset>
-                <IonItem button>
+                <IonItem button detail>
+                  <IonIcon icon={folderOutline} slot="start" />
                   <IonLabel>Item 1</IonLabel>
                 </IonItem>
-                <IonItem button>
+                <IonItem button detail>
+                  <IonIcon icon={folderOutline} slot="start" />
                   <IonLabel>Item 2</IonLabel>
                 </IonItem>
-                <IonItem button>
+                <IonItem button detail>
+                  <IonIcon icon={folderOutline} slot="start" />
                   <IonLabel>Item 3</IonLabel>
                 </IonItem>
               </IonList>

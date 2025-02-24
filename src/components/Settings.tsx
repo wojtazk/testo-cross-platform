@@ -99,11 +99,9 @@ export const Settings: React.FC = () => {
       <IonListHeader>Quiz</IonListHeader>
       <IonList inset>
         <IonItem>
-          <IonLabel color="medium">
+          <IonLabel>
             Liczba dodatkowych powtórzeń w przypadku{' '}
-            <span style={{ color: 'var(--ion-color-danger-shade)' }}>
-              błędnej
-            </span>{' '}
+            <span style={{ color: 'var(--ion-color-danger)' }}>błędnej</span>{' '}
             odpowiedzi
           </IonLabel>
         </IonItem>
@@ -131,7 +129,7 @@ export const Settings: React.FC = () => {
       </IonList>
       <IonList inset>
         <IonItem>
-          <IonLabel color="medium">Wstępna liczba powtórzeń</IonLabel>
+          <IonLabel>Wstępna liczba powtórzeń</IonLabel>
         </IonItem>
         <IonItem>
           <IonInput
@@ -156,7 +154,7 @@ export const Settings: React.FC = () => {
       </IonList>
       <IonList inset>
         <IonItem>
-          <IonLabel color="medium">Maksymalna liczba powtórzeń</IonLabel>
+          <IonLabel>Maksymalna liczba powtórzeń</IonLabel>
         </IonItem>
         <IonItem>
           <IonInput

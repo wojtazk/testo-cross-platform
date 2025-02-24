@@ -1,17 +1,3 @@
-/* set background bar color to be mixed with black or white */
-ion-progress-bar {
-  --background: color-mix(in srgb, var(--progress-background) 40%, white);
-}
-
-.ion-palette-dark ion-progress-bar {
-  --background: color-mix(in srgb, var(--progress-background) 40%, black);
-}
-
-/* change bar color on md */
-.md ion-progress-bar {
-  --progress-background: #39b54a;
-}
-
 /* styles for popover on ios */
 .ios ion-popover {
   --backdrop-opacity: 0.4;
