@@ -1,12 +1,12 @@
 import { useReducer } from 'react';
 
-import { Images, SaveJSONType } from './handleLoadQuizData';
+import { Image, SaveJSONType } from './handleLoadQuizData';
 import { Question } from './parseQuizQuestion';
 
 export type QuizState = {
   saveJSON: SaveJSONType;
   questions: Question[];
-  images: Images;
+  images: Image[];
 };
 
 export type QuizStateDispatchAction =
@@ -22,6 +22,7 @@ export type QuizStateDispatchAction =
       };
     };
 
+// FIXME: removing question items if reoccurrences == 0
 const reducer = (
   state: QuizState,
   action: QuizStateDispatchAction
@@ -63,7 +64,7 @@ const initialState: QuizState = {
     reoccurrences: [],
   },
   questions: [],
-  images: {},
+  images: [],
 };
 export const useQuizState = () => {
   const [quizState, dispatchQuizState] = useReducer(reducer, initialState);

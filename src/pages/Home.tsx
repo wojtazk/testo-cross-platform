@@ -82,10 +82,13 @@ const Home: React.FC = () => {
 
     // FIXME: check if save.json exists
 
+    console.time('loading quiz'); // timing quiz load
     handleLoadQuizData(
       { loadProgress: true, quizInitialReps },
       draggedPath
     ).then((quizData) => {
+      console.timeEnd('loading quiz'); // timing quiz load
+      console.log(quizData); // show loaded quiz
       dispatchQuizState({
         type: 'SET_STATE',
         payload: quizData as QuizState,

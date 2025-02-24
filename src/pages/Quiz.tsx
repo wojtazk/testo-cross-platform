@@ -34,7 +34,6 @@ const Quiz: React.FC = () => {
   const history = useHistory();
 
   const { quizState } = useAppContext();
-  console.log(quizState); // FIXME
 
   // FIXME: file write test
   // useEffect(() => {

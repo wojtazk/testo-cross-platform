@@ -19,9 +19,7 @@ export type SaveJSONType = {
   reoccurrences: { tag: string; value: number }[] | [];
 };
 
-export type Images = {
-  [key: string]: string;
-};
+export type Image = { name: string; imageBase64: string };
 
 type Options = {
   loadProgress?: boolean;
@@ -100,9 +98,8 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
   })();
 
   // read image binary data and convert it to base64
-  const images = (async () => {
-    const images = {} as Images;
-    for (const imageFile of imageFiles) {
+  const images = Promise.all(
+    imageFiles.map(async (imageFile) => {
       const imageBinary = await readFile(await join(path, imageFile.name));
 
       // convert to Base64
@@ -110,38 +107,47 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
         imageBinary.reduce((data, byte) => data + String.fromCharCode(byte), '')
       );
 
-      images[imageFile.name] = imageBase64;
-    }
-
-    return images;
-  })();
-
-  // parse files into quiz questions
-  const questions = Promise.all(
-    questionFiles.map(async (questionFile) => {
-      const fileContent = await readTextFile(
-        await join(path, questionFile.name)
-      );
-
-      // NOTE: new line windows - '\r\n', else - '/n'
-      const lines = fileContent
-        .split(/\r?\n/)
-        .map((line) => line.trim())
-        .filter((line) => line !== '');
-
-      // get question reoccurrences
-      let questionReoccurrences = options.quizInitialReps;
-      if (options.loadProgress) {
-        questionReoccurrences =
-          (await saveJSON).reoccurrences.find(
-            (item) => item.tag === questionFile.name
-          )?.value ?? options.quizInitialReps;
-      }
-
-      // parse into X and Y questions
-      return parseQuizQuestion(questionFile.name, questionReoccurrences, lines);
+      return { name: imageFile.name, imageBase64 };
     })
   );
+
+  // parse files into quiz questions
+  const questions = (async () => {
+    return (
+      await Promise.all(
+        questionFiles.map(async (questionFile) => {
+          const fileContent = await readTextFile(
+            await join(path, questionFile.name)
+          );
+
+          // get question reoccurrences
+          let questionReoccurrences = options.quizInitialReps;
+          if (options.loadProgress) {
+            questionReoccurrences =
+              (await saveJSON).reoccurrences.find(
+                (item) => item.tag === questionFile.name
+              )?.value ?? options.quizInitialReps;
+          }
+
+          // skip parsing already learned questions
+          if (questionReoccurrences === 0) return undefined;
+
+          // NOTE: new line windows - '\r\n', else - '/n'
+          const lines = fileContent
+            .split(/\r?\n/)
+            .map((line) => line.trim())
+            .filter((line) => line !== '');
+
+          // parse into X and Y questions
+          return parseQuizQuestion(
+            questionFile.name,
+            questionReoccurrences,
+            lines
+          );
+        })
+      )
+    ).filter((question) => question !== undefined);
+  })();
 
   return {
     saveJSON: await saveJSON,
