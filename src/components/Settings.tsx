@@ -84,7 +84,6 @@ export const Settings: React.FC = () => {
       toggleIonDarkPalette(prefersDark.matches);
     } else {
       setTheme(newTheme);
-      toggleIonDarkPalette(newTheme === 'dark');
     }
   };
 

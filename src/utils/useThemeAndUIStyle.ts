@@ -15,9 +15,13 @@ export const useThemeAndUIStyle = () => {
     undefined
   );
   useEffect(() => {
-    // follow the system theme
-    if (theme !== undefined) return;
+    // set user preffered theme
+    if (theme !== undefined) {
+      toggleIonDarkPalette(theme === 'dark');
+      return;
+    }
 
+    // follow the system theme
     // Use matchMedia to check the user preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     toggleIonDarkPalette(prefersDark.matches);
