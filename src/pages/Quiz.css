@@ -20,9 +20,15 @@ ion-chip {
 }
 
 #question-answers ion-item {
-  text-align: center;
+  text-align: justify;
+  text-align-last: center;
+}
+#question-answers ion-list {
+  margin: 0.5em;
+  margin-bottom: 0.6em;
 }
 
 #quiz-footer ion-chip {
+  color: inherit;
   cursor: text;
 }

@@ -36,12 +36,12 @@ import {
 import './Quiz.css';
 
 import { useAppContext } from '../AppContext';
+import { Question } from '../utils/parseQuizQuestion';
+import { convertMsToTimeString, useTimer } from '../utils/useTimer';
 // import { writeTextFile } from '@tauri-apps/plugin-fs';
 
 const Quiz: React.FC = () => {
   const history = useHistory();
-
-  const { quizState } = useAppContext();
 
   // FIXME: file write test
   // useEffect(() => {
@@ -64,12 +64,28 @@ const Quiz: React.FC = () => {
     setPopoverOpen(false);
   };
 
+  // quiz
+  const { quizState, dispatchQuizState } = useAppContext();
+  const currentQuestion = useRef<Question>(
+    quizState.questions[quizState.currentQuestionIndex]
+  );
+
+  // learning timer
+  const { timer } = useTimer(quizState.saveJSON.time, 1000);
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton aria-label="go back" onClick={() => history.goBack()}>
+            <IonButton
+              aria-label="go back"
+              onClick={() => {
+                // FIXME:
+                dispatchQuizState({ type: 'UPDATE_TIMER', payload: timer });
+                history.goBack();
+              }}
+            >
               <IonIcon slot="icon-only" ios={chevronBack} md={arrowBack} />
             </IonButton>
           </IonButtons>
@@ -137,23 +153,20 @@ const Quiz: React.FC = () => {
             id="question-header"
             class="ion-text-center ion-justify-content-center"
           >
-            <IonCol size="small" style={{ fontSize: '100%' }}>
-              <IonLabel color="medium">Czas nauki: 12:00</IonLabel>
-            </IonCol>
-          </IonRow>
-
-          <IonRow id="question-content">
-            <IonCol class="ion-text-justify ion-margin-horizontal ion-margin-top">
-              <IonLabel>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has?
+            <IonCol size="small" style={{ fontSize: '90%' }}>
+              <IonLabel color="medium">
+                Czas nauki: {convertMsToTimeString(timer)}
               </IonLabel>
             </IonCol>
           </IonRow>
 
-          <IonRow id="question-answers">
+          <IonRow id="question-content">
+            <IonCol class="ion-text-justify ion-margin">
+              <IonLabel>{currentQuestion.current?.content}</IonLabel>
+            </IonCol>
+          </IonRow>
+
+          <IonRow id="question-answers" class="ion-padding-horizontal">
             <IonCol>
               <IonList inset lines="none">
                 <IonItem button detail={false}>
@@ -168,9 +181,17 @@ const Quiz: React.FC = () => {
 
               <IonList inset lines="none">
                 <IonItem>
-                  <IonSelect placeholder="wybierz">
+                  <IonSelect
+                    interface="alert"
+                    okText="OK"
+                    cancelText="Anuluj"
+                    placeholder="wybierz"
+                  >
                     <IonLabel slot="label">{'Question Y - {wybór 1}'}</IonLabel>
-                    <IonSelectOption value="apple">Apple</IonSelectOption>
+                    <IonSelectOption value="apple">
+                      Apple Apple Apple Apple Apple Apple Apple Apple Apple
+                      Apple Apple Apple Apple Apple Apple Apple
+                    </IonSelectOption>
                     <IonSelectOption value="banana">Banana</IonSelectOption>
                     <IonSelectOption value="orange">Orange</IonSelectOption>
                   </IonSelect>
@@ -181,16 +202,18 @@ const Quiz: React.FC = () => {
         </IonGrid>
       </IonContent>
 
-      <IonFooter id="quiz-footer" class="ion-text-center ion-padding">
-        <IonChip>
-          <IonLabel>PLIK_200.txt</IonLabel>
-        </IonChip>
+      <IonFooter id="quiz-footer">
+        <IonToolbar class="ion-text-center">
+          <IonChip>
+            <IonLabel>PLIK_200.txt</IonLabel>
+          </IonChip>
 
-        <IonChip>
-          <IonLabel>
-            Ponowne wystąpienia: <IonText color="primary">12</IonText>
-          </IonLabel>
-        </IonChip>
+          <IonChip>
+            <IonLabel>
+              Ponowne wystąpienia: <IonText color="primary">12</IonText>
+            </IonLabel>
+          </IonChip>
+        </IonToolbar>
       </IonFooter>
     </IonPage>
   );

@@ -6,11 +6,13 @@ import { Question } from './parseQuizQuestion';
 export type QuizState = {
   saveJSON: SaveJSONType;
   questions: Question[];
+  currentQuestionIndex: number;
   images: Image[];
 };
 
 export type QuizStateDispatchAction =
   | { type: 'SET_STATE'; payload: QuizState }
+  | { type: 'UPDATE_TIMER'; payload: number }
   | {
       type: 'UPDATE_STATE';
       payload: {
@@ -29,9 +31,20 @@ const reducer = (
 ): QuizState => {
   if (action.payload === undefined) return state;
 
+  // FIXME:
+  console.log(action);
+
   switch (action.type) {
     case 'SET_STATE':
-      return { ...action.payload };
+      return {
+        ...action.payload,
+        currentQuestionIndex: Math.floor(
+          Math.random() * action.payload.questions.length
+        ),
+      };
+    case 'UPDATE_TIMER': // FIXME: bye bye
+      state.saveJSON.time = action.payload;
+      return { ...state };
     case 'UPDATE_STATE':
       return {
         saveJSON: {
@@ -41,11 +54,10 @@ const reducer = (
           numberOfLearnedQuestions: action.payload.numberOfLearnedQuestions,
           time: action.payload.time,
         },
-        questions: [
-          ...state.questions.slice(0, action.payload.questionIndex),
-          { ...state.questions[action.payload.questionIndex] },
-          ...state.questions.slice(action.payload.questionIndex + 1),
-        ],
+        questions: state.questions.filter((q) => q.reoccurrences > 0),
+        currentQuestionIndex: Math.floor(
+          Math.random() * (state.questions.length - 1)
+        ),
         images: state.images,
       };
     default:
@@ -64,6 +76,7 @@ const initialState: QuizState = {
     reoccurrences: [],
   },
   questions: [],
+  currentQuestionIndex: NaN,
   images: [],
 };
 export const useQuizState = () => {
