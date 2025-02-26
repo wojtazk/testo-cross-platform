@@ -17,13 +17,10 @@ export type QuizStateDispatchAction =
       type: 'UPDATE_STATE';
     };
 
-// FIXME: removing question items if reoccurrences == 0
 const reducer = (
   state: QuizState,
   action: QuizStateDispatchAction
 ): QuizState => {
-  // if (action.payload === undefined) return state;
-
   switch (action.type) {
     case 'SET_STATE':
       return {
@@ -36,13 +33,6 @@ const reducer = (
       state.saveJSON.time = action.payload;
       return { ...state };
     case 'UPDATE_STATE':
-      const currentQuestion = state.questions[state.currentQuestionIndex];
-      if (currentQuestion.reoccurrences === 0)
-        state.saveJSON.reoccurrences.push({
-          tag: currentQuestion.tag,
-          value: 0,
-        });
-
       const newQuestions = state.questions.filter((q) => q.reoccurrences > 0);
       return {
         saveJSON: state.saveJSON,
