@@ -10,25 +10,56 @@
 ion-popover ion-content ion-list ion-item ion-icon {
   color: var(--ion-color-dark);
 } */
-ion-chip {
+
+#quiz-footer ion-chip {
   --background: var(--ion-item-background);
+  color: inherit;
+  cursor: text;
 }
 
 #question-content {
-  text-align: justify;
+  text-align: center;
   text-align-last: center;
 }
 
 #question-answers ion-item {
-  text-align: justify;
+  text-align: center;
   text-align-last: center;
 }
 #question-answers ion-list {
+  padding: 0;
+  border: 0.2em solid var(--ion-item-background);
   margin: 0.5em;
   margin-bottom: 0.6em;
 }
 
-#quiz-footer ion-chip {
-  color: inherit;
-  cursor: text;
+.ios #question-answers ion-list {
+  border-radius: 0.5em;
+}
+
+#question-buttons {
+  margin: 0.5em;
+}
+
+/* answer feedback */
+#question-answers ion-list.selected {
+  border: 0.2em solid var(--ion-color-medium-shade);
+}
+
+/* correct and selected */
+#question-answers.check ion-list.correct.selected {
+  border: 0.2em solid var(--ion-color-success-shade);
+}
+/* correct and not selected */
+#question-answers.check ion-list.correct {
+  border: 0.2em solid var(--ion-color-warning-shade);
+}
+
+/* wrong and selected */
+#question-answers.check ion-list.wrong.selected {
+  border: 0.2em solid var(--ion-color-danger-shade);
+}
+/* wrong and not selected */
+#question-answers.check ion-list.wrong {
+  border: 0.2em solid var(--ion-item-background);
 }

@@ -18,10 +18,8 @@ import {
   IonChip,
   IonFooter,
   IonText,
-  IonSelect,
-  IonSelectOption,
 } from '@ionic/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   arrowBack,
@@ -36,20 +34,12 @@ import {
 import './Quiz.css';
 
 import { useAppContext } from '../AppContext';
-import { Question } from '../utils/parseQuizQuestion';
-import { convertMsToTimeString, useTimer } from '../utils/useTimer';
+import { AnswersX } from '../components/AnswersX';
+import { Timer } from '../components/Timer';
 // import { writeTextFile } from '@tauri-apps/plugin-fs';
 
 const Quiz: React.FC = () => {
   const history = useHistory();
-
-  // FIXME: file write test
-  // useEffect(() => {
-  //   writeTextFile(
-  //     'C:\\Users\\Kowal\\Desktop\\New folder\\test_test.txt',
-  //     'Hello There'
-  //   );
-  // });
 
   // popover menu
   const popoverElement = useRef<HTMLIonPopoverElement>(null);
@@ -66,12 +56,93 @@ const Quiz: React.FC = () => {
 
   // quiz
   const { quizState, dispatchQuizState } = useAppContext();
-  const currentQuestion = useRef<Question>(
+  const currentQuestionRef = useRef(
     quizState.questions[quizState.currentQuestionIndex]
   );
+  const userAnswersRef = useRef<number[]>(
+    Array(currentQuestionRef.current.answers.length).fill(0)
+  );
+  const answersElementRef = useRef<HTMLIonRowElement>(null);
+  const checkAnswersRef = useRef<boolean>(false);
+  const [loadNewQuestion, setLoadNewQuestion] = useState(false);
 
-  // learning timer
-  const { timer } = useTimer(quizState.saveJSON.time, 1000);
+  const { quizWrongAnswerExtraReps, quizMaxReps } = useAppContext();
+  const handleUserAnswer = () => {
+    checkAnswersRef.current = true;
+    answersElementRef.current?.classList.toggle('check', true);
+
+    setLoadNewQuestion(true);
+
+    // TODO: update state
+    const userAnswerCorrect = currentQuestionRef.current.answers.every(
+      (q, idx) => q.correct == userAnswersRef.current[idx]
+    );
+    // FIXME: works for X questions
+    console.log(userAnswersRef.current);
+    console.log(
+      currentQuestionRef.current.answers.every(
+        (q, idx) => q.correct == userAnswersRef.current[idx]
+      )
+    );
+
+    quizState.saveJSON.time = timerRef.current;
+
+    if (userAnswerCorrect) {
+      currentQuestionRef.current.reoccurrences -= 1;
+      quizState.saveJSON.numberOfCorrectAnswers += 1;
+    } else {
+      currentQuestionRef.current.reoccurrences += quizWrongAnswerExtraReps;
+      if (currentQuestionRef.current.reoccurrences > quizMaxReps)
+        currentQuestionRef.current.reoccurrences = quizMaxReps;
+      quizState.saveJSON.numberOfBadAnswers += 1;
+    }
+
+    if (currentQuestionRef.current.reoccurrences === 0) {
+      quizState.saveJSON.numberOfLearnedQuestions += 1;
+
+      quizState.saveJSON.reoccurrences.push({
+        tag: currentQuestionRef.current.tag,
+        value: 0,
+      });
+    }
+
+    dispatchQuizState({ type: 'UPDATE_STATE' });
+  };
+
+  const handleLoadNewQuestion = () => {
+    checkAnswersRef.current = false;
+    answersElementRef.current?.classList.toggle('check', false);
+
+    setLoadNewQuestion(false);
+
+    // get current question
+    const tmp = currentQuestionRef.current;
+    // assign new question
+    currentQuestionRef.current =
+      quizState.questions[quizState.currentQuestionIndex];
+    // force question answers component rerender (in case the same question is drawn)
+    if (tmp === currentQuestionRef.current) {
+      tmp.answers = tmp.answers.slice();
+    }
+
+    // clear user answers
+    userAnswersRef.current = Array(
+      currentQuestionRef.current.answers.length
+    ).fill(0);
+  };
+
+  // learning timer ref
+  const timerRef = useRef(quizState.saveJSON.time);
+
+  useEffect(() => {
+    // cleanup when componenet unmounts
+    return () => {
+      dispatchQuizState({
+        type: 'UPDATE_TIMER',
+        payload: timerRef.current,
+      });
+    };
+  }, []);
 
   return (
     <IonPage>
@@ -81,8 +152,6 @@ const Quiz: React.FC = () => {
             <IonButton
               aria-label="go back"
               onClick={() => {
-                // FIXME:
-                dispatchQuizState({ type: 'UPDATE_TIMER', payload: timer });
                 history.goBack();
               }}
             >
@@ -154,49 +223,55 @@ const Quiz: React.FC = () => {
             class="ion-text-center ion-justify-content-center"
           >
             <IonCol size="small" style={{ fontSize: '90%' }}>
-              <IonLabel color="medium">
-                Czas nauki: {convertMsToTimeString(timer)}
-              </IonLabel>
+              <Timer timerRef={timerRef} />
             </IonCol>
           </IonRow>
 
           <IonRow id="question-content">
-            <IonCol class="ion-text-justify ion-margin">
-              <IonLabel>{currentQuestion.current?.content}</IonLabel>
+            <IonCol class="ion-margin">
+              <IonLabel>{currentQuestionRef.current.content}</IonLabel>
             </IonCol>
           </IonRow>
 
-          <IonRow id="question-answers" class="ion-padding-horizontal">
+          <IonRow
+            ref={answersElementRef}
+            id="question-answers"
+            class="ion-padding-horizontal ion-margin-bottom"
+          >
             <IonCol>
-              <IonList inset lines="none">
-                <IonItem button detail={false}>
-                  <IonLabel>Question X 1</IonLabel>
-                </IonItem>
-              </IonList>
-              <IonList inset lines="none">
-                <IonItem button detail={false}>
-                  <IonLabel>Question X 2</IonLabel>
-                </IonItem>
-              </IonList>
+              {currentQuestionRef.current.type === 'X' && (
+                <AnswersX
+                  answers={currentQuestionRef.current.answers}
+                  checkAnswersRef={checkAnswersRef}
+                  userAnswersRef={userAnswersRef}
+                />
+              )}
+            </IonCol>
+          </IonRow>
 
-              <IonList inset lines="none">
-                <IonItem>
-                  <IonSelect
-                    interface="alert"
-                    okText="OK"
-                    cancelText="Anuluj"
-                    placeholder="wybierz"
-                  >
-                    <IonLabel slot="label">{'Question Y - {wybór 1}'}</IonLabel>
-                    <IonSelectOption value="apple">
-                      Apple Apple Apple Apple Apple Apple Apple Apple Apple
-                      Apple Apple Apple Apple Apple Apple Apple
-                    </IonSelectOption>
-                    <IonSelectOption value="banana">Banana</IonSelectOption>
-                    <IonSelectOption value="orange">Orange</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-              </IonList>
+          <IonRow
+            id="question-buttons"
+            class="ion-margin-top ion-padding-horizontal ion-justify-content-end"
+          >
+            <IonCol sizeLg="5">
+              {!loadNewQuestion && (
+                <IonButton
+                  fill="outline"
+                  expand="block"
+                  onClick={handleUserAnswer}
+                >
+                  Sprawdź
+                </IonButton>
+              )}
+              {loadNewQuestion && (
+                <IonButton
+                  fill="outline"
+                  expand="block"
+                  onClick={handleLoadNewQuestion}
+                >
+                  Następne pytanie
+                </IonButton>
+              )}
             </IonCol>
           </IonRow>
         </IonGrid>
@@ -205,12 +280,15 @@ const Quiz: React.FC = () => {
       <IonFooter id="quiz-footer">
         <IonToolbar class="ion-text-center">
           <IonChip>
-            <IonLabel>PLIK_200.txt</IonLabel>
+            <IonLabel>{currentQuestionRef.current.tag}</IonLabel>
           </IonChip>
 
           <IonChip>
             <IonLabel>
-              Ponowne wystąpienia: <IonText color="primary">12</IonText>
+              Ponowne wystąpienia:{' '}
+              <IonText color="primary">
+                {currentQuestionRef.current.reoccurrences}
+              </IonText>
             </IonLabel>
           </IonChip>
         </IonToolbar>
