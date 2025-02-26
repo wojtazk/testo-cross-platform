@@ -20,7 +20,7 @@ export type AppContextValues = {
   setQuizInitialReps: React.Dispatch<React.SetStateAction<QuizReps>>;
   quizWrongAnswerExtraReps: QuizReps;
   setQuizWrongAnswerExtraReps: React.Dispatch<React.SetStateAction<QuizReps>>;
-  quizMaxReps?: QuizReps;
+  quizMaxReps: QuizReps;
   setQuizMaxReps: React.Dispatch<React.SetStateAction<QuizReps>>;
   theme: Theme;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
