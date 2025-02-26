@@ -16,7 +16,7 @@ export type SaveJSONType = {
   numberOfCorrectAnswers: number;
   numberOfLearnedQuestions: number;
   time: number;
-  reoccurrences: { tag: string; value: number }[] | [];
+  reoccurrences: { tag: string; value: number }[];
 };
 
 export type Image = { name: string; imageBase64: string };
@@ -148,6 +148,10 @@ export const handleLoadQuizData = async (options: Options, path: string) => {
       )
     ).filter((question) => question !== undefined);
   })();
+
+  (await saveJSON).reoccurrences = (await saveJSON).reoccurrences.filter(
+    (item) => item.value === 0
+  );
 
   return {
     saveJSON: await saveJSON,

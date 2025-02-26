@@ -15,13 +15,6 @@ export type QuizStateDispatchAction =
   | { type: 'UPDATE_TIMER'; payload: number }
   | {
       type: 'UPDATE_STATE';
-      payload: {
-        numberOfBadAnswers: number;
-        numberOfCorrectAnswers: number;
-        numberOfLearnedQuestions: number;
-        time: number;
-        questionIndex: number;
-      };
     };
 
 // FIXME: removing question items if reoccurrences == 0
@@ -29,10 +22,7 @@ const reducer = (
   state: QuizState,
   action: QuizStateDispatchAction
 ): QuizState => {
-  if (action.payload === undefined) return state;
-
-  // FIXME:
-  console.log(action);
+  // if (action.payload === undefined) return state;
 
   switch (action.type) {
     case 'SET_STATE':
@@ -46,18 +36,18 @@ const reducer = (
       state.saveJSON.time = action.payload;
       return { ...state };
     case 'UPDATE_STATE':
+      const currentQuestion = state.questions[state.currentQuestionIndex];
+      if (currentQuestion.reoccurrences === 0)
+        state.saveJSON.reoccurrences.push({
+          tag: currentQuestion.tag,
+          value: 0,
+        });
+
+      const newQuestions = state.questions.filter((q) => q.reoccurrences > 0);
       return {
-        saveJSON: {
-          ...state.saveJSON,
-          numberOfBadAnswers: action.payload.numberOfBadAnswers,
-          numberOfCorrectAnswers: action.payload.numberOfCorrectAnswers,
-          numberOfLearnedQuestions: action.payload.numberOfLearnedQuestions,
-          time: action.payload.time,
-        },
-        questions: state.questions.filter((q) => q.reoccurrences > 0),
-        currentQuestionIndex: Math.floor(
-          Math.random() * (state.questions.length - 1)
-        ),
+        saveJSON: state.saveJSON,
+        questions: newQuestions,
+        currentQuestionIndex: Math.floor(Math.random() * newQuestions.length),
         images: state.images,
       };
     default:
