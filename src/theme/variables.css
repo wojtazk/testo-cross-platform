@@ -21,6 +21,16 @@ http://ionicframework.com/docs/theming/ */
   font-size: 130%;
 }
 
+.ios ion-button {
+  --background-activated-opacity: 0.1;
+  --color-activated: var(--ion-color-primary);
+  /* --background-hover: var(--ion-color-primary); */
+}
+
+ion-list {
+  padding: 0 !important;
+}
+
 /* set background of progress bar color to be mixed with black or white */
 ion-progress-bar {
   --background: color-mix(in srgb, var(--progress-background) 40%, white);
