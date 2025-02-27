@@ -24,7 +24,7 @@ export const AnswersX: React.FC<{
           if (checkAnswersRef.current) return;
           answerElementRef.current[index]?.classList.toggle('selected');
           userAnswersRef.current[index] =
-            userAnswersRef.current[index] === 0 ? 1 : 0;
+            userAnswersRef.current[index] === -1 ? 1 : -1;
         }}
       >
         <IonItem button detail={false} lines="none">

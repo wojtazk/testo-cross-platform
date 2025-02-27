@@ -11,11 +11,31 @@ ion-popover ion-content ion-list ion-item ion-icon {
   color: var(--ion-color-dark);
 } */
 
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate {
+  animation: fadeInScale 0.4s ease-in-out;
+}
+
 #quiz-footer ion-chip {
   --background: var(--ion-item-background);
   color: inherit;
   cursor: text;
 }
+
+/* #question-header {
+  animation: none !important;
+  transform: none !important;
+} */
 
 #question-content {
   text-align: center;
@@ -29,6 +49,7 @@ ion-popover ion-content ion-list ion-item ion-icon {
 #question-answers ion-list {
   padding: 0;
   border: 0.2em solid var(--ion-item-background);
+  transition: border 0.1s ease-in;
   margin: 0.5em;
   margin-bottom: 0.6em;
 }

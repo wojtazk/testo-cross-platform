@@ -60,30 +60,32 @@ const Quiz: React.FC = () => {
     quizState.questions[quizState.currentQuestionIndex]
   );
   const userAnswersRef = useRef<number[]>(
-    Array(currentQuestionRef.current.answers.length).fill(0)
+    Array(currentQuestionRef.current.answers.length).fill(-1)
   );
+
   const answersElementRef = useRef<HTMLIonRowElement>(null);
+  const quizContentElementRef = useRef<HTMLIonContentElement>(null);
+
   const checkAnswersRef = useRef<boolean>(false);
   const [loadNewQuestion, setLoadNewQuestion] = useState(false);
 
   const { quizWrongAnswerExtraReps, quizMaxReps } = useAppContext();
   const handleUserAnswer = () => {
     checkAnswersRef.current = true;
-    answersElementRef.current?.classList.toggle('check', true);
+    answersElementRef.current?.classList.add('check');
+    quizContentElementRef.current?.classList.add('animate');
 
     setLoadNewQuestion(true);
 
-    // TODO: update state
-    const userAnswerCorrect = currentQuestionRef.current.answers.every(
-      (q, idx) => q.correct == userAnswersRef.current[idx]
-    );
+    const userAnswerCorrect =
+      currentQuestionRef.current.type === 'X'
+        ? currentQuestionRef.current.answers.every(
+            (q, idx) => q.correct == (userAnswersRef.current[idx] == 1)
+          )
+        : false;
+
     // FIXME: works for X questions
     console.log(userAnswersRef.current);
-    console.log(
-      currentQuestionRef.current.answers.every(
-        (q, idx) => q.correct == userAnswersRef.current[idx]
-      )
-    );
 
     quizState.saveJSON.time = timerRef.current;
 
@@ -111,7 +113,8 @@ const Quiz: React.FC = () => {
 
   const handleLoadNewQuestion = () => {
     checkAnswersRef.current = false;
-    answersElementRef.current?.classList.toggle('check', false);
+    answersElementRef.current?.classList.remove('check');
+    quizContentElementRef.current?.classList.remove('animate');
 
     setLoadNewQuestion(false);
 
@@ -128,7 +131,7 @@ const Quiz: React.FC = () => {
     // clear user answers
     userAnswersRef.current = Array(
       currentQuestionRef.current.answers.length
-    ).fill(0);
+    ).fill(-1);
   };
 
   // learning timer ref
@@ -215,7 +218,7 @@ const Quiz: React.FC = () => {
           </IonContent>
         </IonPopover>
       </IonHeader>
-      <IonContent>
+      <IonContent ref={quizContentElementRef} class="animate">
         {/* FIXME: */}
         <IonGrid fixed>
           <IonRow
