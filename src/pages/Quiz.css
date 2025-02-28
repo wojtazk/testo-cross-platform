@@ -49,7 +49,8 @@ ion-popover ion-content ion-list ion-item ion-icon {
 #question-answers ion-list {
   padding: 0;
   border: 0.2em solid var(--ion-item-background);
-  transition: border 0.1s ease-in;
+  transition: border 0.1s ease;
+  transition: color 0.1s ease;
   margin: 0.5em;
   margin-bottom: 0.6em;
 }
@@ -59,10 +60,11 @@ ion-popover ion-content ion-list ion-item ion-icon {
 }
 
 #question-buttons {
-  margin: 0.5em;
+  margin: 0.6em;
 }
 
 /* answer feedback */
+/* X */
 #question-answers ion-list.selected {
   border: 0.2em solid var(--ion-color-medium-shade);
 }
@@ -83,4 +85,39 @@ ion-popover ion-content ion-list ion-item ion-icon {
 /* wrong and not selected */
 #question-answers.check ion-list.wrong {
   border: 0.2em solid var(--ion-item-background);
+}
+
+/* Y */
+#question-answers.check ion-list.correct:has(ion-select) {
+  border: 0.2em solid var(--ion-item-background);
+}
+#question-answers.check .correct ion-select::part(text),
+#question-answers.check .correct ion-select::part(placeholder) {
+  color: var(--ion-color-success-shade);
+}
+
+#question-answers.check .wrong ion-select::part(text),
+#question-answers.check .wrong ion-select::part(placeholder) {
+  color: var(--ion-color-danger-shade);
+}
+
+#question-answers ion-note {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0;
+  transform: scaleY(0);
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: transform 0.2s ease, opacity 0.2s ease, margin 0.2s ease;
+}
+#question-answers.check ion-note {
+  margin-bottom: 1em;
+  transform: scaleY(1);
+  opacity: 1;
+  height: auto;
+}
+#question-answers.check ion-note span {
+  color: var(--ion-color-success-shade);
 }

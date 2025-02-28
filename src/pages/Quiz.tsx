@@ -19,6 +19,7 @@ import {
   IonFooter,
   IonText,
 } from '@ionic/react';
+import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
@@ -35,8 +36,8 @@ import './Quiz.css';
 
 import { useAppContext } from '../AppContext';
 import { AnswersX } from '../components/AnswersX';
+import { AnswersY } from '../components/AnswersY';
 import { Timer } from '../components/Timer';
-// import { writeTextFile } from '@tauri-apps/plugin-fs';
 
 const Quiz: React.FC = () => {
   const history = useHistory();
@@ -59,6 +60,7 @@ const Quiz: React.FC = () => {
   const currentQuestionRef = useRef(
     quizState.questions[quizState.currentQuestionIndex]
   );
+
   const userAnswersRef = useRef<number[]>(
     Array(currentQuestionRef.current.answers.length).fill(-1)
   );
@@ -82,16 +84,19 @@ const Quiz: React.FC = () => {
         ? currentQuestionRef.current.answers.every(
             (q, idx) => q.correct == (userAnswersRef.current[idx] == 1)
           )
+        : currentQuestionRef.current.type === 'Y'
+        ? currentQuestionRef.current.answers.every(
+            (q, idx) => q.correct == userAnswersRef.current[idx]
+          )
         : false;
-
-    // FIXME: works for X questions
-    console.log(userAnswersRef.current);
 
     quizState.saveJSON.time = timerRef.current;
 
     if (userAnswerCorrect) {
-      currentQuestionRef.current.reoccurrences -= 1;
-      quizState.saveJSON.numberOfCorrectAnswers += 1;
+      if (currentQuestionRef.current.reoccurrences > 0) {
+        currentQuestionRef.current.reoccurrences -= 1;
+        quizState.saveJSON.numberOfCorrectAnswers += 1;
+      }
     } else {
       currentQuestionRef.current.reoccurrences += quizWrongAnswerExtraReps;
       if (currentQuestionRef.current.reoccurrences > quizMaxReps)
@@ -117,6 +122,12 @@ const Quiz: React.FC = () => {
     quizContentElementRef.current?.classList.remove('animate');
 
     setLoadNewQuestion(false);
+
+    // finish quiz
+    if (quizState.questions.length === 0) {
+      // TODO: stuff
+      return;
+    }
 
     // get current question
     const tmp = currentQuestionRef.current;
@@ -219,7 +230,6 @@ const Quiz: React.FC = () => {
         </IonPopover>
       </IonHeader>
       <IonContent ref={quizContentElementRef} class="animate">
-        {/* FIXME: */}
         <IonGrid fixed>
           <IonRow
             id="question-header"
@@ -232,7 +242,60 @@ const Quiz: React.FC = () => {
 
           <IonRow id="question-content">
             <IonCol class="ion-margin">
-              <IonLabel>{currentQuestionRef.current.content}</IonLabel>
+              <IonLabel>
+                {React.useMemo(
+                  () => (
+                    <>
+                      {currentQuestionRef.current.type === 'X' &&
+                        // ['hello', 'there', '[img]test.png[/img]']
+                        currentQuestionRef.current.content
+                          .split(/(\[img\].*?\[\/img\])/)
+                          .filter((part) => part.trim() !== '')
+                          .map((part, index) => {
+                            if (part.startsWith('[img]')) {
+                              const imgName = (part.match(
+                                /\[img\](.*?)\[\/img\]/
+                              ) || [''])[1];
+                              const imgExtension = imgName
+                                .slice(imgName.lastIndexOf('.'))
+                                .slice(1);
+                              const imgBase64 = quizState.images.find(
+                                (img) => img.name === imgName
+                              )?.imageBase64;
+
+                              return (
+                                // FIXME: zoom and pinch?, make function reusable
+                                <div key={index}>
+                                  <img
+                                    src={`data:image/${imgExtension};base64,${imgBase64}`}
+                                    alt={imgName}
+                                  />
+                                  <br />
+                                </div>
+                              );
+                            } else {
+                              return <IonText key={index}>{part}</IonText>;
+                            }
+                          })}
+                      {currentQuestionRef.current.type === 'Y' &&
+                        // ['hello', 'there', '{name}']
+                        currentQuestionRef.current.content
+                          .split(/({.*?})/g)
+                          .filter((part) => part.trim() !== '')
+                          .map((part, index) =>
+                            part.startsWith('{') ? (
+                              <IonText key={index} color="primary">
+                                {part}
+                              </IonText>
+                            ) : (
+                              <IonText key={index}>{part}</IonText>
+                            )
+                          )}
+                    </>
+                  ),
+                  [currentQuestionRef.current]
+                )}
+              </IonLabel>
             </IonCol>
           </IonRow>
 
@@ -242,12 +305,33 @@ const Quiz: React.FC = () => {
             class="ion-padding-horizontal ion-margin-bottom"
           >
             <IonCol>
-              {currentQuestionRef.current.type === 'X' && (
-                <AnswersX
-                  answers={currentQuestionRef.current.answers}
-                  checkAnswersRef={checkAnswersRef}
-                  userAnswersRef={userAnswersRef}
-                />
+              {React.useMemo(
+                () => (
+                  <>
+                    {currentQuestionRef.current.type === 'X' && (
+                      <AnswersX
+                        answers={currentQuestionRef.current.answers}
+                        checkAnswersRef={checkAnswersRef}
+                        userAnswersRef={userAnswersRef}
+                      />
+                    )}
+                    {currentQuestionRef.current.type === 'Y' && (
+                      <AnswersY
+                        labels={
+                          // ['{wybór 1}', '{wybór 2}']
+                          currentQuestionRef.current.content.match(
+                            /{[^{}]*}/g
+                          ) || []
+                        }
+                        answers={currentQuestionRef.current.answers}
+                        checkAnswersRef={checkAnswersRef}
+                        userAnswersRef={userAnswersRef}
+                      />
+                    )}
+                    {/* FIXME: piwo */}
+                  </>
+                ),
+                [currentQuestionRef.current.answers]
               )}
             </IonCol>
           </IonRow>
@@ -259,6 +343,7 @@ const Quiz: React.FC = () => {
             <IonCol sizeLg="5">
               {!loadNewQuestion && (
                 <IonButton
+                  type="submit"
                   fill="outline"
                   expand="block"
                   onClick={handleUserAnswer}
@@ -268,6 +353,7 @@ const Quiz: React.FC = () => {
               )}
               {loadNewQuestion && (
                 <IonButton
+                  type="submit"
                   fill="outline"
                   expand="block"
                   onClick={handleLoadNewQuestion}
