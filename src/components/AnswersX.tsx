@@ -1,6 +1,7 @@
 import { IonItem, IonLabel, IonList } from '@ionic/react';
 import React, { useRef } from 'react';
 import { shuffleArray } from '../utils/arrayShuffle';
+import { ContentWithImages } from './ContentWithImages';
 
 export const AnswersX: React.FC<{
   answers: { content: string; correct: boolean }[];
@@ -28,7 +29,12 @@ export const AnswersX: React.FC<{
         }}
       >
         <IonItem button detail={false} lines="none">
-          <IonLabel>{answer.content}</IonLabel>
+          <IonLabel>
+            <ContentWithImages
+              content={answer.content}
+              transformImages={false}
+            />
+          </IonLabel>
         </IonItem>
       </IonList>
     );

@@ -38,6 +38,7 @@ import { useAppContext } from '../AppContext';
 import { AnswersX } from '../components/AnswersX';
 import { AnswersY } from '../components/AnswersY';
 import { Timer } from '../components/Timer';
+import { ContentWithImages } from '../components/ContentWithImages';
 
 const Quiz: React.FC = () => {
   const history = useHistory();
@@ -246,37 +247,13 @@ const Quiz: React.FC = () => {
                 {React.useMemo(
                   () => (
                     <>
-                      {currentQuestionRef.current.type === 'X' &&
+                      {currentQuestionRef.current.type === 'X' && (
                         // ['hello', 'there', '[img]test.png[/img]']
-                        currentQuestionRef.current.content
-                          .split(/(\[img\].*?\[\/img\])/)
-                          .filter((part) => part.trim() !== '')
-                          .map((part, index) => {
-                            if (part.startsWith('[img]')) {
-                              const imgName = (part.match(
-                                /\[img\](.*?)\[\/img\]/
-                              ) || [''])[1];
-                              const imgExtension = imgName
-                                .slice(imgName.lastIndexOf('.'))
-                                .slice(1);
-                              const imgBase64 = quizState.images.find(
-                                (img) => img.name === imgName
-                              )?.imageBase64;
-
-                              return (
-                                // FIXME: zoom and pinch?, make function reusable
-                                <div key={index}>
-                                  <img
-                                    src={`data:image/${imgExtension};base64,${imgBase64}`}
-                                    alt={imgName}
-                                  />
-                                  <br />
-                                </div>
-                              );
-                            } else {
-                              return <IonText key={index}>{part}</IonText>;
-                            }
-                          })}
+                        <ContentWithImages
+                          content={currentQuestionRef.current.content}
+                          transformImages
+                        />
+                      )}
                       {currentQuestionRef.current.type === 'Y' &&
                         // ['hello', 'there', '{name}']
                         currentQuestionRef.current.content
