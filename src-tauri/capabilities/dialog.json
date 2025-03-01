@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "dialog",
+  "description": "Enables dialog plugin",
+  "windows": ["main"],
+  "permissions": ["dialog:allow-ask", "dialog:allow-open"]
+}

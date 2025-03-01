@@ -18,8 +18,11 @@ import {
   IonProgressBar,
 } from '@ionic/react';
 
+import React from 'react';
+
 import { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import { open } from '@tauri-apps/plugin-dialog';
 
 import {
   cog,
@@ -34,12 +37,14 @@ import { Settings } from '../components/Settings';
 
 import { useDragDrop } from '../utils/useDragDrop';
 import { useAppContext } from '../AppContext';
-import { handleLoadQuizData } from '../utils/handleLoadQuizData';
 
 // types
-import { QuizState } from '../utils/useQuizState';
+import { useLoadQuizData } from '../utils/useLoadQuizData';
 
 const Home: React.FC = () => {
+  const history = useHistory();
+  const { quizState } = useAppContext();
+
   // ion modal setup
   const modalRef = useRef<HTMLIonModalElement>(null);
   const pageRef = useRef(null);
@@ -50,7 +55,6 @@ const Home: React.FC = () => {
   }, []);
 
   // handle drag drop
-  // FIXME: implement oppening dragged dirs
   const { draggingOver, draggedPath } = useDragDrop();
   const dropZoneElementRef = useRef(null);
   useEffect(() => {
@@ -70,32 +74,27 @@ const Home: React.FC = () => {
   }, [draggingOver]);
 
   // handle quiz openig
-  const history = useHistory();
-  const { quizState, dispatchQuizState } = useAppContext();
-  // get quiz settings
-  const { quizInitialReps } = useAppContext();
+  const loadQuizData = useLoadQuizData();
+  // handle picking dirs
+  const openQuizDirectory = React.useCallback(async () => {
+    const selectedPath = await open({
+      // FIXME: mobile implementation
+      directory: true,
+      multiple: false,
+      // defaultPath: await appDir(),
+    });
+    console.log(selectedPath);
+
+    if (!selectedPath) return;
+
+    loadQuizData(selectedPath);
+  }, []);
   // handle dragged dirs
-  // FIXME:
   useEffect(() => {
     if (draggedPath === '') return;
     if (location.pathname !== '/') return;
 
-    // FIXME: check if save.json exists
-
-    console.time('loading quiz'); // timing quiz load
-    handleLoadQuizData(
-      { loadProgress: true, quizInitialReps },
-      draggedPath
-    ).then((quizData) => {
-      console.timeEnd('loading quiz'); // timing quiz load
-      console.log(quizData); // show loaded quiz
-      dispatchQuizState({
-        type: 'SET_STATE',
-        payload: quizData as QuizState,
-      });
-
-      history.push('/quiz');
-    });
+    loadQuizData(draggedPath);
   }, [draggedPath]);
 
   return (
@@ -136,6 +135,7 @@ const Home: React.FC = () => {
 
         <IonGrid fixed>
           <IonRow>
+            {/* Continue Quiz */}
             {quizState.saveJSON.location && (
               <IonCol>
                 <IonListHeader>Kontynuuj Quiz</IonListHeader>
@@ -163,10 +163,16 @@ const Home: React.FC = () => {
             )}
           </IonRow>
           <IonRow>
+            {/* Open Quiz */}
             <IonCol ref={dropZoneElementRef}>
               <IonListHeader>Otwórz Quiz</IonListHeader>
               <IonList lines="none" inset>
-                <IonItem button detail aria-label="otwórz quiz">
+                <IonItem
+                  button
+                  detail
+                  aria-label="otwórz quiz"
+                  onClick={openQuizDirectory}
+                >
                   <IonIcon icon={folderOutline} slot="start" />
                   <IonLabel>Wybierz lub upuść folder</IonLabel>
                 </IonItem>
@@ -174,6 +180,7 @@ const Home: React.FC = () => {
             </IonCol>
           </IonRow>
           <IonRow>
+            {/* Recently Used */}
             <IonCol>
               <IonListHeader>Ostatnio używane</IonListHeader>
               <IonList inset>

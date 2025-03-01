@@ -94,10 +94,8 @@ const Quiz: React.FC = () => {
     quizState.saveJSON.time = timerRef.current;
 
     if (userAnswerCorrect) {
-      if (currentQuestionRef.current.reoccurrences > 0) {
-        currentQuestionRef.current.reoccurrences -= 1;
-        quizState.saveJSON.numberOfCorrectAnswers += 1;
-      }
+      currentQuestionRef.current.reoccurrences -= 1;
+      quizState.saveJSON.numberOfCorrectAnswers += 1;
     } else {
       currentQuestionRef.current.reoccurrences += quizWrongAnswerExtraReps;
       if (currentQuestionRef.current.reoccurrences > quizMaxReps)

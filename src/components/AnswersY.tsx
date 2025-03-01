@@ -34,7 +34,7 @@ export const AnswersY: React.FC<{
         >
           <IonItem lines="none">
             <IonSelect
-              interface="popover"
+              interface="alert"
               okText="OK"
               cancelText="Anuluj"
               placeholder="wybierz"
