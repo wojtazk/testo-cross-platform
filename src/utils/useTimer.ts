@@ -20,13 +20,25 @@ export const useTimer = (initialValueMs: number, intervalMs: number) => {
       const dt = Date.now() - expected.current; // time drift
 
       if (dt > intervalMs) {
-        console.warn(`Significant timer drift!: ${dt} ms`);
+        console.warn(`Significant quiz timer drift: ${dt} ms, adjusting`);
+
+        // update timer
+        setTimer(
+          (prev) => prev + intervalMs * (Math.floor(dt / intervalMs) + 1)
+        );
+        expected.current += intervalMs * (Math.floor(dt / intervalMs) + 1);
+
+        // compensate for drift
+        setTimeout(step, Math.max(0, intervalMs - (dt % intervalMs)));
+        return;
       }
 
-      setTimer((prev) => prev + intervalMs); // update timer
-
+      // update timer
+      setTimer((prev) => prev + intervalMs);
       expected.current += intervalMs;
-      setTimeout(step, Math.max(0, intervalMs - dt)); // compensate for drift
+
+      // compensate for drift
+      setTimeout(step, Math.max(0, intervalMs - dt));
     };
 
     const timer = setTimeout(step, intervalMs);
