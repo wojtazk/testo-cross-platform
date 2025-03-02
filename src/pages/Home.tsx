@@ -51,16 +51,23 @@ import { useLoadQuizData } from '../utils/useLoadQuizData';
 const currentOS = type();
 const isMobile = ['ios', 'android'].includes(currentOS);
 
-// mobile
-// document dir
-const quizDir = await documentDir();
-const quizDirEntries = isMobile
-  ? (await readDir(quizDir))
-      .filter((entry) => entry.isDirectory)
-      .map((entry) => entry.name)
-  : undefined;
-
 const Home: React.FC = () => {
+  const [quizDir, setQuizDir] = useState('');
+  const [quizDirEntries, setQuizDieEntries] = useState<string[]>();
+  useEffect(() => {
+    (async () => {
+      const quizDir = await documentDir();
+      const quizDirEntries = isMobile
+        ? (await readDir(quizDir))
+            .filter((entry) => entry.isDirectory)
+            .map((entry) => entry.name)
+        : undefined;
+
+      setQuizDir(quizDir);
+      setQuizDieEntries(quizDirEntries);
+    })();
+  }, []);
+
   const history = useHistory();
   const { quizState } = useAppContext();
 
