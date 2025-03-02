@@ -3,5 +3,9 @@
   "identifier": "dialog",
   "description": "Enables dialog plugin",
   "windows": ["main"],
-  "permissions": ["dialog:allow-ask", "dialog:allow-open"]
+  "permissions": [
+    "dialog:allow-ask",
+    "dialog:allow-open",
+    "dialog:allow-message"
+  ]
 }

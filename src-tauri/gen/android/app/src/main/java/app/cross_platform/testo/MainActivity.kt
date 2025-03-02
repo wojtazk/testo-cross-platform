@@ -1,3 +1,3 @@
-package app.testownik.cross_platform
+package app.cross_platform.testo
 
 class MainActivity : TauriActivity()

@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "os-information",
+  "description": "Enables OS information plugin",
+  "windows": ["main"],
+  "permissions": ["os:allow-os-type"]
+}

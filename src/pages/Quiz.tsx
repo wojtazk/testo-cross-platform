@@ -20,7 +20,7 @@ import {
   IonText,
 } from '@ionic/react';
 import React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   arrowBack,
@@ -29,7 +29,7 @@ import {
   ellipsisVertical,
   save,
   statsChart,
-  trash,
+  // trash,
 } from 'ionicons/icons';
 
 import './Quiz.css';
@@ -39,6 +39,16 @@ import { AnswersX } from '../components/AnswersX';
 import { AnswersY } from '../components/AnswersY';
 import { Timer } from '../components/Timer';
 import { ContentWithImages } from '../components/ContentWithImages';
+import { useSaveQuizProgress } from '../utils/useSaveQuizProgress';
+import { Question } from '../utils/parseQuizQuestion';
+
+const PIWO = {
+  tag: 'PIWO',
+  reoccurrences: 2137,
+  type: 'X',
+  content: 'KONIEC',
+  answers: [],
+};
 
 const Quiz: React.FC = () => {
   const history = useHistory();
@@ -58,8 +68,9 @@ const Quiz: React.FC = () => {
 
   // quiz
   const { quizState, dispatchQuizState } = useAppContext();
+  const saveQuizProgress = useSaveQuizProgress();
   const currentQuestionRef = useRef(
-    quizState.questions[quizState.currentQuestionIndex]
+    quizState.questions[quizState.currentQuestionIndex] || PIWO
   );
 
   const userAnswersRef = useRef<number[]>(
@@ -124,7 +135,7 @@ const Quiz: React.FC = () => {
 
     // finish quiz
     if (quizState.questions.length === 0) {
-      // TODO: stuff
+      currentQuestionRef.current = PIWO as Question;
       return;
     }
 
@@ -147,16 +158,6 @@ const Quiz: React.FC = () => {
   // learning timer ref
   const timerRef = useRef(quizState.saveJSON.time);
 
-  useEffect(() => {
-    // cleanup when componenet unmounts
-    return () => {
-      dispatchQuizState({
-        type: 'UPDATE_TIMER',
-        payload: timerRef.current,
-      });
-    };
-  }, []);
-
   return (
     <IonPage>
       <IonHeader>
@@ -165,6 +166,10 @@ const Quiz: React.FC = () => {
             <IonButton
               aria-label="go back"
               onClick={() => {
+                dispatchQuizState({
+                  type: 'UPDATE_TIMER',
+                  payload: timerRef.current,
+                });
                 history.goBack();
               }}
             >
@@ -200,7 +205,7 @@ const Quiz: React.FC = () => {
         >
           <IonContent>
             <IonList lines="full" onClick={closePopover}>
-              <IonItem button>
+              <IonItem button onClick={saveQuizProgress}>
                 <IonIcon slot="start" aria-hidden="true" icon={save} />
                 <IonLabel>Zapisz stan</IonLabel>
               </IonItem>
@@ -213,7 +218,7 @@ const Quiz: React.FC = () => {
                 <IonIcon slot="start" aria-hidden="true" icon={statsChart} />
                 <IonLabel>Statystyki</IonLabel>
               </IonItem>
-              <IonItem button lines="none">
+              {/* <IonItem button lines="none">
                 <IonIcon
                   color="danger"
                   slot="start"
@@ -223,7 +228,7 @@ const Quiz: React.FC = () => {
                 <IonLabel color="danger">
                   <b> Zresetuj progress</b>
                 </IonLabel>
-              </IonItem>
+              </IonItem> */}
             </IonList>
           </IonContent>
         </IonPopover>
@@ -303,7 +308,6 @@ const Quiz: React.FC = () => {
                         userAnswersRef={userAnswersRef}
                       />
                     )}
-                    {/* FIXME: piwo */}
                   </>
                 ),
                 [currentQuestionRef.current.answers]
@@ -311,32 +315,51 @@ const Quiz: React.FC = () => {
             </IonCol>
           </IonRow>
 
+          {/* The End - PIWO */}
+          {currentQuestionRef.current === PIWO && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                style={{ height: '50vh', maxWidth: '80vh' }}
+                src="beer.png"
+                alt="piwo"
+              />
+            </div>
+          )}
+
           <IonRow
             id="question-buttons"
             class="ion-margin-top ion-padding-horizontal ion-justify-content-end"
           >
-            <IonCol sizeLg="5">
-              {!loadNewQuestion && (
-                <IonButton
-                  type="submit"
-                  fill="outline"
-                  expand="block"
-                  onClick={handleUserAnswer}
-                >
-                  Sprawdź
-                </IonButton>
-              )}
-              {loadNewQuestion && (
-                <IonButton
-                  type="submit"
-                  fill="outline"
-                  expand="block"
-                  onClick={handleLoadNewQuestion}
-                >
-                  Następne pytanie
-                </IonButton>
-              )}
-            </IonCol>
+            {currentQuestionRef.current !== PIWO && (
+              <IonCol sizeLg="5">
+                {!loadNewQuestion && (
+                  <IonButton
+                    type="submit"
+                    fill="outline"
+                    expand="block"
+                    onClick={handleUserAnswer}
+                  >
+                    Sprawdź
+                  </IonButton>
+                )}
+                {loadNewQuestion && (
+                  <IonButton
+                    type="submit"
+                    fill="outline"
+                    expand="block"
+                    onClick={handleLoadNewQuestion}
+                  >
+                    Następne pytanie
+                  </IonButton>
+                )}
+              </IonCol>
+            )}
           </IonRow>
         </IonGrid>
       </IonContent>

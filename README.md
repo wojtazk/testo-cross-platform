@@ -7,6 +7,9 @@
 # Testownik - wersja wieloplatformowa
 
 Ikona -> https://iconduck.com/icons/115336/game-boy-4
+
+Piwo -> https://pixabay.com/photos/beer-beer-mug-foam-thirst-binge-3804654/
+
 generator ikon -> https://icon.kitchen/
 
 https://v2.tauri.app/start/prerequisites/

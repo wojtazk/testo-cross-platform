@@ -11,27 +11,30 @@ export const useLoadQuizData = () => {
   const { quizInitialReps, dispatchQuizState } = useAppContext();
   const history = useHistory();
 
-  return React.useCallback(async (path: string) => {
-    let loadProgress = false;
-    const saveJSONPath = await join(path, 'save.json');
-    if (await exists(saveJSONPath)) {
-      loadProgress = await ask('Wczytać postęp?', {
-        kind: 'info',
-      });
-    }
-
-    console.time('loading quiz'); // timing quiz load
-    handleLoadQuizData({ loadProgress, quizInitialReps }, path).then(
-      (quizData) => {
-        console.timeEnd('loading quiz'); // timing quiz load
-        console.log(quizData); // show loaded quiz
-        dispatchQuizState({
-          type: 'SET_STATE',
-          payload: quizData as QuizState,
+  return React.useCallback(
+    async (path: string) => {
+      let loadProgress = false;
+      const saveJSONPath = await join(path, 'save.json');
+      if (await exists(saveJSONPath)) {
+        loadProgress = await ask('Wczytać postęp?', {
+          kind: 'info',
         });
-
-        history.push('/quiz');
       }
-    );
-  }, []);
+
+      console.time('loading quiz'); // timing quiz load
+      handleLoadQuizData({ loadProgress, quizInitialReps }, path).then(
+        (quizData) => {
+          console.timeEnd('loading quiz'); // timing quiz load
+          console.log(quizData); // show loaded quiz
+          dispatchQuizState({
+            type: 'SET_STATE',
+            payload: quizData as QuizState,
+          });
+
+          history.push('/quiz');
+        }
+      );
+    },
+    [quizInitialReps, dispatchQuizState, history]
+  );
 };

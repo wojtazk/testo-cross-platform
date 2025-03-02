@@ -1,4 +1,4 @@
-/src/main/java/app/testownik/cross_platform/generated
+/src/main/java/app/cross_platform/testo/generated
 /src/main/jniLibs/**/*.so
 /src/main/assets/tauri.conf.json
 /tauri.build.gradle.kts

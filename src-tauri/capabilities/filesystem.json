@@ -3,5 +3,10 @@
   "identifier": "filesystem",
   "description": "Enables fs plugin",
   "windows": ["main"],
-  "permissions": ["fs:allow-app-read", "fs:allow-app-write"]
+  "permissions": [
+    "fs:allow-app-read",
+    "fs:allow-app-write",
+    "fs:allow-document-read-recursive",
+    "fs:allow-document-write-recursive"
+  ]
 }

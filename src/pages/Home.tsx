@@ -16,13 +16,19 @@ import {
   IonLabel,
   IonListHeader,
   IonProgressBar,
+  IonNote,
+  IonText,
 } from '@ionic/react';
 
 import React from 'react';
 
 import { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import { open } from '@tauri-apps/plugin-dialog';
+import { type } from '@tauri-apps/plugin-os';
+import { documentDir } from '@tauri-apps/api/path';
+import { readDir } from '@tauri-apps/plugin-fs';
 
 import {
   cog,
@@ -40,6 +46,19 @@ import { useAppContext } from '../AppContext';
 
 // types
 import { useLoadQuizData } from '../utils/useLoadQuizData';
+
+// get os type
+const currentOS = type();
+const isMobile = ['ios', 'android'].includes(currentOS);
+
+// mobile
+// document dir
+const quizDir = await documentDir();
+const quizDirEntries = isMobile
+  ? (await readDir(quizDir))
+      .filter((entry) => entry.isDirectory)
+      .map((entry) => entry.name)
+  : undefined;
 
 const Home: React.FC = () => {
   const history = useHistory();
@@ -75,19 +94,16 @@ const Home: React.FC = () => {
 
   // handle quiz openig
   const loadQuizData = useLoadQuizData();
-  // handle picking dirs
+  // handle picking dirs (Desktop only)
   const openQuizDirectory = React.useCallback(async () => {
-    const selectedPath = await open({
-      // FIXME: mobile implementation
+    const selected = await open({
       directory: true,
       multiple: false,
-      // defaultPath: await appDir(),
     });
-    console.log(selectedPath);
 
-    if (!selectedPath) return;
+    if (!selected) return;
 
-    loadQuizData(selectedPath);
+    loadQuizData(selected as string);
   }, []);
   // handle dragged dirs
   useEffect(() => {
@@ -164,40 +180,72 @@ const Home: React.FC = () => {
           </IonRow>
           <IonRow>
             {/* Open Quiz */}
-            <IonCol ref={dropZoneElementRef}>
-              <IonListHeader>Otwórz Quiz</IonListHeader>
-              <IonList lines="none" inset>
-                <IonItem
-                  button
-                  detail
-                  aria-label="otwórz quiz"
-                  onClick={openQuizDirectory}
-                >
-                  <IonIcon icon={folderOutline} slot="start" />
-                  <IonLabel>Wybierz lub upuść folder</IonLabel>
-                </IonItem>
-              </IonList>
-            </IonCol>
+            {!isMobile && (
+              <IonCol ref={dropZoneElementRef}>
+                <IonListHeader>Otwórz Quiz</IonListHeader>
+                <IonList lines="none" inset>
+                  <IonItem
+                    button
+                    detail
+                    aria-label="otwórz quiz"
+                    onClick={openQuizDirectory}
+                  >
+                    <IonIcon icon={folderOutline} slot="start" />
+                    <IonLabel>Wybierz lub upuść folder</IonLabel>
+                  </IonItem>
+                </IonList>
+              </IonCol>
+            )}
+            {isMobile && (
+              <IonCol>
+                <IonListHeader>Twoje Quizy</IonListHeader>
+                <IonNote class="ion-margin-horizontal">
+                  Umieść w katalogu:
+                </IonNote>
+                <br />
+                <IonNote class="ion-margin-horizontal">
+                  <IonText color="primary">
+                    {quizDir.slice(quizDir.indexOf('/Android/'))}
+                  </IonText>
+                </IonNote>
+
+                <IonList inset>
+                  {quizDirEntries?.map((dirName, index) => (
+                    <IonItem
+                      button
+                      detail
+                      key={index}
+                      onClick={() => loadQuizData(`${quizDir}/${dirName}`)}
+                    >
+                      <IonIcon icon={folderOutline} slot="start" />
+                      <IonLabel>{dirName}</IonLabel>
+                    </IonItem>
+                  ))}
+                </IonList>
+              </IonCol>
+            )}
           </IonRow>
           <IonRow>
-            {/* Recently Used */}
-            <IonCol>
-              <IonListHeader>Ostatnio używane</IonListHeader>
-              <IonList inset>
-                <IonItem button detail>
-                  <IonIcon icon={folderOutline} slot="start" />
-                  <IonLabel>Item 1</IonLabel>
-                </IonItem>
-                <IonItem button detail>
-                  <IonIcon icon={folderOutline} slot="start" />
-                  <IonLabel>Item 2</IonLabel>
-                </IonItem>
-                <IonItem button detail>
-                  <IonIcon icon={folderOutline} slot="start" />
-                  <IonLabel>Item 3</IonLabel>
-                </IonItem>
-              </IonList>
-            </IonCol>
+            {/* FIXME: Recently Used */}
+            {/* {false && (
+              <IonCol>
+                <IonListHeader>Ostatnio używane</IonListHeader>
+                <IonList inset>
+                  <IonItem button detail>
+                    <IonIcon icon={folderOutline} slot="start" />
+                    <IonLabel>Item 1</IonLabel>
+                  </IonItem>
+                  <IonItem button detail>
+                    <IonIcon icon={folderOutline} slot="start" />
+                    <IonLabel>Item 2</IonLabel>
+                  </IonItem>
+                  <IonItem button detail>
+                    <IonIcon icon={folderOutline} slot="start" />
+                    <IonLabel>Item 3</IonLabel>
+                  </IonItem>
+                </IonList>
+              </IonCol>
+            )} */}
           </IonRow>
         </IonGrid>
       </IonContent>
