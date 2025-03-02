@@ -29,7 +29,7 @@ const reducer = (
           Math.random() * action.payload.questions.length
         ),
       };
-    case 'UPDATE_TIMER': // FIXME: bye bye
+    case 'UPDATE_TIMER':
       state.saveJSON.time = action.payload;
       return { ...state };
     case 'UPDATE_STATE':
