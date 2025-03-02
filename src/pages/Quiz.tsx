@@ -212,6 +212,10 @@ const Quiz: React.FC = () => {
               <IonItem
                 button
                 onClick={() => {
+                  dispatchQuizState({
+                    type: 'UPDATE_TIMER',
+                    payload: timerRef.current,
+                  });
                   history.push('/quiz/stats');
                 }}
               >

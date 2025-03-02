@@ -199,14 +199,14 @@ const Home: React.FC = () => {
             {isMobile && (
               <IonCol>
                 <IonListHeader>Twoje Quizy</IonListHeader>
-                <IonNote class="ion-margin-horizontal">
-                  Umieść w katalogu:
-                </IonNote>
-                <br />
-                <IonNote class="ion-margin-horizontal">
-                  <IonText color="primary">
-                    {quizDir.slice(quizDir.indexOf('/Android/'))}
-                  </IonText>
+                <IonNote>
+                  <div className="ion-margin-horizontal">
+                    Umieść w katalogu:
+                    <br />
+                    <IonText color="primary">
+                      {quizDir.slice(quizDir.indexOf('/Android/'))}
+                    </IonText>
+                  </div>
                 </IonNote>
 
                 <IonList inset>
