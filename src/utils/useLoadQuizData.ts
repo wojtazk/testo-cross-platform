@@ -1,3 +1,4 @@
+import React from 'react';
 import { useHistory } from 'react-router';
 import { useAppContext } from '../AppContext';
 import { handleLoadQuizData } from './handleLoadQuizData';
@@ -10,12 +11,11 @@ export const useLoadQuizData = () => {
   const { quizInitialReps, dispatchQuizState } = useAppContext();
   const history = useHistory();
 
-  return async (path: string) => {
+  return React.useCallback(async (path: string) => {
     let loadProgress = false;
     const saveJSONPath = await join(path, 'save.json');
     if (await exists(saveJSONPath)) {
       loadProgress = await ask('Wczytać postęp?', {
-        title: 'Testownik',
         kind: 'info',
       });
     }
@@ -33,5 +33,5 @@ export const useLoadQuizData = () => {
         history.push('/quiz');
       }
     );
-  };
+  }, []);
 };
