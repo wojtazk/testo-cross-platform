@@ -211,6 +211,7 @@ const Quiz: React.FC = () => {
               </IonItem>
               <IonItem
                 button
+                lines="none"
                 onClick={() => {
                   dispatchQuizState({
                     type: 'UPDATE_TIMER',
