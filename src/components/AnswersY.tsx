@@ -7,7 +7,7 @@ import {
   IonSelectOption,
 } from '@ionic/react';
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { shuffleArray } from '../utils/arrayShuffle';
 
 export const AnswersY: React.FC<{
@@ -22,6 +22,23 @@ export const AnswersY: React.FC<{
     el.classList.remove('selected', 'correct', 'wrong');
     (el as HTMLIonListElement).querySelector('ion-select')!.value = undefined;
   });
+
+  useEffect(() => {
+    const eventHandler = (event: globalThis.KeyboardEvent) => {
+      if (event.key > String(answerElementRef.current.length)) return;
+      if (event.key >= '1' && event.key <= '9') {
+        answerElementRef.current[Number(event.key) - 1]
+          .querySelector('ion-select')
+          ?.click();
+      }
+    };
+
+    document.addEventListener('keydown', eventHandler);
+
+    return () => {
+      document.removeEventListener('keydown', eventHandler);
+    };
+  }, []);
 
   const answersList = answers.map((answer, index) => {
     return (

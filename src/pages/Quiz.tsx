@@ -19,7 +19,7 @@ import {
   IonFooter,
   IonText,
 } from '@ionic/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRef, useState } from 'react';
 import { useHistory } from 'react-router';
 import {
@@ -157,6 +157,24 @@ const Quiz: React.FC = () => {
 
   // learning timer ref
   const timerRef = useRef(quizState.saveJSON.time);
+
+  useEffect(() => {
+    // question-buttons
+    const eventHandler = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        document
+          .getElementById('question-buttons')
+          ?.querySelector('ion-button')
+          ?.click();
+      }
+    };
+
+    document.addEventListener('keydown', eventHandler);
+
+    return () => {
+      document.removeEventListener('keydown', eventHandler);
+    };
+  }, []);
 
   return (
     <IonPage>
