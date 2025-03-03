@@ -8,7 +8,8 @@ import { exists } from '@tauri-apps/plugin-fs';
 import { ask } from '@tauri-apps/plugin-dialog';
 
 export const useLoadQuizData = () => {
-  const { quizInitialReps, dispatchQuizState } = useAppContext();
+  const { quizInitialReps, dispatchQuizState, addRecentlyUsed } =
+    useAppContext();
   const history = useHistory();
 
   return React.useCallback(
@@ -34,6 +35,8 @@ export const useLoadQuizData = () => {
           history.push('/quiz');
         }
       );
+
+      addRecentlyUsed(path);
     },
     [quizInitialReps, dispatchQuizState, history]
   );

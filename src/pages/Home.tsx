@@ -55,6 +55,8 @@ const Home: React.FC = () => {
   const [quizDir, setQuizDir] = useState('');
   const [quizDirEntries, setQuizDieEntries] = useState<string[]>();
   useEffect(() => {
+    if (!isMobile) return;
+
     (async () => {
       const quizDir = await documentDir();
       const quizDirEntries = isMobile
@@ -102,16 +104,20 @@ const Home: React.FC = () => {
   // handle quiz openig
   const loadQuizData = useLoadQuizData();
   // handle picking dirs (Desktop only)
-  const openQuizDirectory = React.useCallback(async () => {
-    const selected = await open({
-      directory: true,
-      multiple: false,
-    });
+  const openQuizDirectory = React.useCallback(
+    async (defaultPath: string = '') => {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+        defaultPath,
+      });
 
-    if (!selected) return;
+      if (!selected) return;
 
-    loadQuizData(selected as string);
-  }, []);
+      loadQuizData(selected);
+    },
+    []
+  );
   // handle dragged dirs
   useEffect(() => {
     if (draggedPath === '') return;
@@ -119,6 +125,9 @@ const Home: React.FC = () => {
 
     loadQuizData(draggedPath);
   }, [draggedPath]);
+
+  // recently used
+  const { recentlyUsed } = useAppContext();
 
   return (
     <IonPage ref={pageRef}>
@@ -187,72 +196,87 @@ const Home: React.FC = () => {
           </IonRow>
           <IonRow>
             {/* Open Quiz */}
-            {!isMobile && (
-              <IonCol ref={dropZoneElementRef}>
-                <IonListHeader>Otwórz Quiz</IonListHeader>
-                <IonList lines="none" inset>
-                  <IonItem
-                    button
-                    detail
-                    aria-label="otwórz quiz"
-                    onClick={openQuizDirectory}
-                  >
-                    <IonIcon icon={folderOutline} slot="start" />
-                    <IonLabel>Wybierz lub upuść folder</IonLabel>
-                  </IonItem>
-                </IonList>
-              </IonCol>
-            )}
-            {isMobile && (
-              <IonCol>
-                <IonListHeader>Twoje Quizy</IonListHeader>
-                <IonNote>
-                  <div className="ion-margin-horizontal">
-                    Umieść w katalogu:
-                    <br />
-                    <IonText color="primary">
-                      {quizDir.slice(quizDir.indexOf('/Android/'))}
-                    </IonText>
-                  </div>
-                </IonNote>
+            {React.useMemo(
+              () => (
+                <>
+                  {!isMobile && (
+                    <IonCol ref={dropZoneElementRef}>
+                      <IonListHeader>Otwórz Quiz</IonListHeader>
+                      <IonList lines="none" inset>
+                        <IonItem
+                          button
+                          detail
+                          aria-label="otwórz quiz"
+                          onClick={openQuizDirectory.bind(null, '')}
+                        >
+                          <IonIcon icon={folderOutline} slot="start" />
+                          <IonLabel>Wybierz lub upuść folder</IonLabel>
+                        </IonItem>
+                      </IonList>
+                    </IonCol>
+                  )}
+                  {isMobile && (
+                    <IonCol>
+                      <IonListHeader>Twoje Quizy</IonListHeader>
+                      <IonNote>
+                        <div className="ion-margin-horizontal">
+                          Umieść w katalogu:
+                          <br />
+                          <IonText color="primary">
+                            {quizDir.slice(quizDir.indexOf('/Android/'))}
+                          </IonText>
+                        </div>
+                      </IonNote>
 
+                      <IonList inset>
+                        {quizDirEntries?.map((dirName, index) => (
+                          <IonItem
+                            button
+                            detail
+                            key={index}
+                            onClick={() =>
+                              loadQuizData(`${quizDir}/${dirName}`)
+                            }
+                          >
+                            <IonIcon icon={folderOutline} slot="start" />
+                            <IonLabel>{dirName}</IonLabel>
+                          </IonItem>
+                        ))}
+                      </IonList>
+                    </IonCol>
+                  )}
+                </>
+              ),
+              [isMobile, quizDir, quizDirEntries]
+            )}
+          </IonRow>
+          <IonRow>
+            {recentlyUsed.length > 0 && (
+              <IonCol>
+                <IonListHeader>Ostatnio używane</IonListHeader>
                 <IonList inset>
-                  {quizDirEntries?.map((dirName, index) => (
+                  {recentlyUsed.map((quizDir) => (
                     <IonItem
                       button
                       detail
-                      key={index}
-                      onClick={() => loadQuizData(`${quizDir}/${dirName}`)}
+                      key={quizDir}
+                      onClick={() =>
+                        isMobile
+                          ? loadQuizData(quizDir)
+                          : openQuizDirectory(quizDir)
+                      }
                     >
                       <IonIcon icon={folderOutline} slot="start" />
-                      <IonLabel>{dirName}</IonLabel>
+                      <IonLabel class="text-nowrap">
+                        {isMobile
+                          ? quizDir.slice(quizDir.lastIndexOf('/') + 1)
+                          : quizDir}
+                      </IonLabel>
                     </IonItem>
                   ))}
                 </IonList>
               </IonCol>
             )}
-          </IonRow>
-          <IonRow>
-            {/* FIXME: Recently Used */}
-            {/* {false && (
-              <IonCol>
-                <IonListHeader>Ostatnio używane</IonListHeader>
-                <IonList inset>
-                  <IonItem button detail>
-                    <IonIcon icon={folderOutline} slot="start" />
-                    <IonLabel>Item 1</IonLabel>
-                  </IonItem>
-                  <IonItem button detail>
-                    <IonIcon icon={folderOutline} slot="start" />
-                    <IonLabel>Item 2</IonLabel>
-                  </IonItem>
-                  <IonItem button detail>
-                    <IonIcon icon={folderOutline} slot="start" />
-                    <IonLabel>Item 3</IonLabel>
-                  </IonItem>
-                </IonList>
-              </IonCol>
-            )} */}
           </IonRow>
         </IonGrid>
       </IonContent>

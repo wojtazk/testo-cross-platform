@@ -13,6 +13,7 @@ import { Theme, UIMode } from './utils/useThemeAndUIStyle';
 import { Zoom } from './utils/useAppZoom';
 import { FontSize } from './utils/useAppFontSize';
 import { QuizState, QuizStateDispatchAction } from './utils/useQuizState';
+import { useRecentyUsed } from './utils/useRecentlyUsed';
 
 // app context types
 export type AppContextValues = {
@@ -35,6 +36,8 @@ export type AppContextValues = {
   setFontSize: React.Dispatch<React.SetStateAction<FontSize>>;
   quizState: QuizState;
   dispatchQuizState: React.ActionDispatch<[action: QuizStateDispatchAction]>;
+  recentlyUsed: string[];
+  addRecentlyUsed: (location: string) => void;
 };
 
 // context
@@ -65,6 +68,9 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
   // quiz state
   const { quizState, dispatchQuizState } = useQuizState();
 
+  // recentrly used
+  const { recentlyUsed, addRecentlyUsed } = useRecentyUsed();
+
   return (
     <AppContext.Provider
       value={{
@@ -87,6 +93,8 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
         setFontSize,
         quizState,
         dispatchQuizState,
+        recentlyUsed,
+        addRecentlyUsed,
       }}
     >
       {children}
