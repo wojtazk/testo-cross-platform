@@ -1,8 +1,5 @@
 import { Route } from 'react-router-dom';
-// import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
-import { IonRouterOutlet, setupIonicReact } from '@ionic/react';
-// FIXME: fix this when ionic team closes the releated issue
-import { IonApp } from './ionic-react-ts-workaround';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 
 import { IonReactRouter } from '@ionic/react-router';
 

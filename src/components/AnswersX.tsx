@@ -10,7 +10,7 @@ export const AnswersX: React.FC<{
 }> = React.memo(({ answers, checkAnswersRef, userAnswersRef }) => {
   // const userSelection;
 
-  const answerElementRef = useRef<any[]>([]);
+  const answerElementRef = useRef<(HTMLIonListElement | null)[]>([]);
   answerElementRef.current.forEach((el) => el?.classList.remove('selected'));
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export const AnswersX: React.FC<{
         document
           .getElementById('question-answers')
           ?.querySelectorAll('ion-item')
-          [Number(event.key) - 1].click();
+          ?.[Number(event.key) - 1]?.click();
       }
     };
 
@@ -37,7 +37,9 @@ export const AnswersX: React.FC<{
         inset
         lines="none"
         class={answer.correct ? 'correct' : 'wrong'}
-        ref={(el): any => (answerElementRef.current[index] = el)}
+        ref={(el) => {
+          answerElementRef.current[index] = el;
+        }}
         key={index}
         onClick={() => {
           if (checkAnswersRef.current) return;

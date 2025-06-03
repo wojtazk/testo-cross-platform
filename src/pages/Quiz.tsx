@@ -57,7 +57,7 @@ const Quiz: React.FC = () => {
   const popoverElement = useRef<HTMLIonPopoverElement>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const openPopover = (e: any) => {
+  const openPopover = (e: React.MouseEvent | React.TouchEvent) => {
     popoverElement.current!.event = e;
     setPopoverOpen(true);
   };
@@ -296,6 +296,7 @@ const Quiz: React.FC = () => {
                           )}
                     </>
                   ),
+                  // eslint-disable-next-line react-hooks/exhaustive-deps
                   [currentQuestionRef.current]
                 )}
               </IonLabel>
@@ -333,6 +334,7 @@ const Quiz: React.FC = () => {
                     )}
                   </>
                 ),
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 [currentQuestionRef.current.answers]
               )}
             </IonCol>

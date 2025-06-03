@@ -16,7 +16,7 @@ export const AnswersY: React.FC<{
   checkAnswersRef: React.RefObject<boolean>;
   userAnswersRef: React.RefObject<number[]>;
 }> = React.memo(({ labels, answers, checkAnswersRef, userAnswersRef }) => {
-  const answerElementRef = useRef<any[]>([]);
+  const answerElementRef = useRef<(HTMLIonListElement | null)[]>([]);
   answerElementRef.current.forEach((el) => {
     if (!el) return;
     el.classList.remove('selected', 'correct', 'wrong');
@@ -27,9 +27,8 @@ export const AnswersY: React.FC<{
     const eventHandler = (event: globalThis.KeyboardEvent) => {
       if (event.key > String(answerElementRef.current.length)) return;
       if (event.key >= '1' && event.key <= '9') {
-        answerElementRef.current[Number(event.key) - 1]
-          .querySelector('ion-select')
-          ?.click();
+        const element = answerElementRef.current[Number(event.key) - 1];
+        element?.querySelector('ion-select')?.click();
       }
     };
 
@@ -47,7 +46,9 @@ export const AnswersY: React.FC<{
           inset
           lines="none"
           class="wrong" // initial value
-          ref={(el): any => (answerElementRef.current[index] = el)}
+          ref={(el) => {
+            answerElementRef.current[index] = el;
+          }}
         >
           <IonItem lines="none">
             <IonSelect
@@ -58,22 +59,25 @@ export const AnswersY: React.FC<{
               onIonChange={(event) => {
                 if (checkAnswersRef.current) {
                   // don't allow selects' value change
-                  answerElementRef.current[index].querySelector(
-                    'ion-select'
-                  )!.value = String(userAnswersRef.current[index]);
+                  const selectElement = answerElementRef.current[
+                    index
+                  ]?.querySelector('ion-select') as HTMLIonSelectElement;
+                  if (selectElement) {
+                    selectElement.value = String(userAnswersRef.current[index]);
+                  }
                   return;
                 }
 
-                answerElementRef.current[index].classList.toggle(
+                answerElementRef.current[index]?.classList.toggle(
                   'correct',
                   event.detail.value === String(answer.correct)
                 );
-                answerElementRef.current[index].classList.toggle(
+                answerElementRef.current[index]?.classList.toggle(
                   'wrong',
                   event.detail.value !== String(answer.correct)
                 );
                 userAnswersRef.current[index] =
-                  Number(event.detail.value) ?? -1;
+                  Number(event.detail.value) || -1;
               }}
             >
               <IonLabel slot="label">{labels[index]}</IonLabel>
