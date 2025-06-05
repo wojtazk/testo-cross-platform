@@ -23,7 +23,7 @@ Projekt dedykuje [Rickowi](https://www.youtube.com/watch?v=dQw4w9WgXcQ) i [Ricki
 
 ## Instalacja
 > [!NOTE] 
-> Przetestowane dla Windows, Android i Linux (.AppImage)
+> Przetestowane dla Windows, Android i Linux (`.AppImage`)
 
 Przejdź do [releases](https://github.com/wojtazk/testo-cross-platform/releases) i pobierz odpowiednią wersję dla twojego systemu
 
