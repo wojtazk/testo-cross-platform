@@ -13,6 +13,7 @@ import {
   IonLabel,
   IonText,
 } from '@ionic/react';
+import { useState } from 'react';
 import { useHistory } from 'react-router';
 import {
   chevronBack,
@@ -29,12 +30,13 @@ import { convertMsToTimeString } from '../utils/useTimer';
 
 const QuizStats: React.FC = () => {
   const history = useHistory();
-
   const { saveJSON } = useAppContext().quizState;
-  const answersSum =
-    saveJSON.numberOfCorrectAnswers + saveJSON.numberOfBadAnswers;
 
-  const demotywatory = [
+  const [answersSum] = useState(
+    saveJSON.numberOfCorrectAnswers + saveJSON.numberOfBadAnswers
+  );
+
+  const [demotywatory] = useState([
     'Twoje statystyki wyglądają jak średnia ocen na pierwszym roku – smutno i tragicznie. 📉',
     'Patrz na jasną stronę… Przynajmniej wiesz, czego NIE umiesz! 🧐',
     'Gratulacje! Masz talent do zgadywania. Szkoda, że nietrafnie. 🎯',
@@ -52,7 +54,11 @@ const QuizStats: React.FC = () => {
     'Twoje statystyki wyglądają jak budżet studencki – żałośnie niskie. 💸',
     'Może spróbuj losować odpowiedzi? Gorzej już chyba nie będzie… albo będzie. 🎲',
     'Jeśli to był test na to, jak mało można wiedzieć, to gratulacje – zdałeś perfekcyjnie. 🎯',
-  ];
+  ]);
+
+  const [demotywatorIdx] = useState(
+    Math.floor(Math.random() * demotywatory.length)
+  );
 
   return (
     <IonPage>
@@ -132,7 +138,7 @@ const QuizStats: React.FC = () => {
         </IonList>
 
         <div className="ion-text-center ion-margin">
-          {demotywatory[Math.floor(Math.random() * demotywatory.length)]}
+          {demotywatory[demotywatorIdx]}
         </div>
       </IonContent>
     </IonPage>
