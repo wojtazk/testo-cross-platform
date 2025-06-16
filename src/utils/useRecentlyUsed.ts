@@ -15,6 +15,7 @@ export const useRecentyUsed = () => {
         ...prevRecentlyUsed.filter((entry) => entry !== location),
       ].slice(0, 5);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { recentlyUsed, addRecentlyUsed };

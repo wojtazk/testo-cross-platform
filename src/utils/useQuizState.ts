@@ -32,7 +32,7 @@ const reducer = (
     case 'UPDATE_TIMER':
       state.saveJSON.time = action.payload;
       return { ...state };
-    case 'UPDATE_STATE':
+    case 'UPDATE_STATE': {
       const newQuestions = state.questions.filter((q) => q.reoccurrences > 0);
       return {
         saveJSON: state.saveJSON,
@@ -40,6 +40,7 @@ const reducer = (
         currentQuestionIndex: Math.floor(Math.random() * newQuestions.length),
         images: state.images,
       };
+    }
     default:
       return state;
   }

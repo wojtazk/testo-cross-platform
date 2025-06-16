@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
 export const convertMsToTimeString = (ms: number) => {
-  let totalSeconds = Math.floor(ms / 1000);
-  let totalMinutes = Math.floor(totalSeconds / 60);
-  let hours = (Math.floor(totalMinutes / 60) + '').padStart(2, '0');
-  let minutes = ((totalMinutes % 60) + '').padStart(2, '0');
-  let seconds = ((totalSeconds % 60) + '').padStart(2, '0');
+  const totalSeconds = Math.floor(ms / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const hours = (Math.floor(totalMinutes / 60) + '').padStart(2, '0');
+  const minutes = ((totalMinutes % 60) + '').padStart(2, '0');
+  const seconds = ((totalSeconds % 60) + '').padStart(2, '0');
 
   return `${hours}h ${minutes}m ${seconds}s`;
 };
@@ -43,6 +43,7 @@ export const useTimer = (initialValueMs: number, intervalMs: number) => {
 
     const timer = setTimeout(step, intervalMs);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { timer };
