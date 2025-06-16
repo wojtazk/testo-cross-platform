@@ -103,4 +103,5 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
 };
 
 // hook to use app context
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAppContext = () => useContext(AppContext);

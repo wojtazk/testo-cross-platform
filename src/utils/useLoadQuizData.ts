@@ -38,6 +38,6 @@ export const useLoadQuizData = () => {
 
       addRecentlyUsed(path);
     },
-    [quizInitialReps, dispatchQuizState, history]
+    [quizInitialReps, dispatchQuizState, history, addRecentlyUsed]
   );
 };

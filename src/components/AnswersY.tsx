@@ -76,8 +76,9 @@ export const AnswersY: React.FC<{
                   'wrong',
                   event.detail.value !== String(answer.correct)
                 );
-                userAnswersRef.current[index] =
-                  Number(event.detail.value) || -1;
+                userAnswersRef.current[index] = Number(
+                  event.detail.value ?? -1
+                );
               }}
             >
               <IonLabel slot="label">{labels[index]}</IonLabel>

@@ -104,26 +104,24 @@ const Home: React.FC = () => {
   // handle quiz openig
   const loadQuizData = useLoadQuizData();
   // handle picking dirs (Desktop only)
-  const openQuizDirectory = React.useCallback(
-    async (defaultPath: string = '') => {
-      const selected = await open({
-        directory: true,
-        multiple: false,
-        defaultPath,
-      });
+  const openQuizDirectory = async (defaultPath: string = '') => {
+    const selected = await open({
+      directory: true,
+      multiple: false,
+      defaultPath,
+    });
 
-      if (!selected) return;
+    if (!selected) return;
 
-      loadQuizData(selected);
-    },
-    []
-  );
+    loadQuizData(selected);
+  };
   // handle dragged dirs
   useEffect(() => {
     if (draggedPath === '') return;
     if (location.pathname !== '/') return;
 
     loadQuizData(draggedPath);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draggedPath]);
 
   // recently used
@@ -247,6 +245,7 @@ const Home: React.FC = () => {
                   )}
                 </>
               ),
+              // eslint-disable-next-line react-hooks/exhaustive-deps
               [isMobile, quizDir, quizDirEntries]
             )}
           </IonRow>
