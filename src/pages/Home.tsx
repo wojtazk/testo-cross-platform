@@ -246,7 +246,7 @@ const Home: React.FC = () => {
                 </>
               ),
               // eslint-disable-next-line react-hooks/exhaustive-deps
-              [isMobile, quizDir, quizDirEntries]
+              [isMobile, quizDir, quizDirEntries, loadQuizData]
             )}
           </IonRow>
           <IonRow>
