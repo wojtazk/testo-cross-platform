@@ -82,15 +82,17 @@ export const AnswersY: React.FC<{
               }}
             >
               <IonLabel slot="label">{labels[index]}</IonLabel>
-              {shuffleArray(
-                answer.content.map((option, idx) => {
-                  return (
-                    <IonSelectOption key={`option-${idx}`} value={`${idx}`}>
-                      {option}
-                    </IonSelectOption>
-                  );
-                })
-              )}
+              {
+                shuffleArray(
+                  answer.content.map((option, idx) => {
+                    return (
+                      <IonSelectOption key={`option-${idx}`} value={`${idx}`}>
+                        {option}
+                      </IonSelectOption>
+                    );
+                  })
+                ) as React.ReactNode[]
+              }
             </IonSelect>
           </IonItem>
         </IonList>
