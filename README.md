@@ -1,8 +1,6 @@
 <img src="https://github.com/user-attachments/assets/f7f1fe77-d2ac-4e86-8713-b6ac3fdf37aa" alt="game boy"/>
 <img src="https://github.com/user-attachments/assets/f7f1fe77-d2ac-4e86-8713-b6ac3fdf37aa" alt="game boy"/>
 <img src="https://github.com/user-attachments/assets/f7f1fe77-d2ac-4e86-8713-b6ac3fdf37aa" alt="game boy"/>
-<img src="https://github.com/user-attachments/assets/f7f1fe77-d2ac-4e86-8713-b6ac3fdf37aa" alt="game boy"/>
-<img src="https://github.com/user-attachments/assets/f7f1fe77-d2ac-4e86-8713-b6ac3fdf37aa" alt="game boy"/>
 
 # Testownik - wersja wieloplatformowa
 
@@ -22,10 +20,28 @@ Projekt dedykuje [Rickowi](https://www.youtube.com/watch?v=dQw4w9WgXcQ) i [Ricki
 
 
 ## Instalacja
-> [!NOTE] 
-> Przetestowane dla Windows, Android i Linux (`.AppImage`)
+Przejdź do [releases](https://github.com/wojtazk/testo-cross-platform/releases) i pobierz odpowiednią wersję aplikacji.
 
-Przejdź do [releases](https://github.com/wojtazk/testo-cross-platform/releases) i pobierz odpowiednią wersję dla twojego systemu
+> [!NOTE] 
+> `Testownik v1.0.3` przetestowany na:
+> - Windows (`.exe`)
+>   - Windows 11 (24H2)
+> - Linux (`.AppImage`)
+>   - Arch Linux (Linux version 6.15.4-arch2-1)
+> - MacOS
+>   - intel (`_x64.app.tar.gz`, `_x64.dmg`)
+>     - macOS Sequoia 15.5 (24F74)
+>     - macOS Ventura 13.7.6 (22H625)
+>   - M1 itd (`_aarch64.app.tar.gz`)
+>     - `no info`
+> - Android (`.apk`)
+>   - crDroid 11.6 (Android 15)
+
+
+### Instalacja z nieznanych źródeł
+- [Windows](https://www.fortect.com/windows-optimization-tips/windows-defender-smartscreen-prevented-an-unrecognized-app-from-starting-warning/#h-how-to-bypass-windows-defender-smartscreen-warning)
+- [macOS](https://www.macworld.com/article/672947/how-to-open-a-mac-app-from-an-unidentified-developer.html#toc-3)
+- [Android](https://docs.pandasuite.com/essentials/mobile-publishing/android/install-app-from-unknown-sources-on-android-device/)
 
 ## Przykładowy testownik
 [testo_test.zip](https://github.com/user-attachments/files/19149701/testo_test.zip)
@@ -78,7 +94,7 @@ cargo tauri android build
 ```
 
 ## Zrzuty Ekranu
-
+### Windows
 ![Windows_1](https://github.com/user-attachments/assets/7d3b84c2-cd2f-449f-a6fd-d9dfbd369710)
 ![Windows_2](https://github.com/user-attachments/assets/d430aba9-13a2-48ee-9266-8eaca569db88)
 ![Windows_3](https://github.com/user-attachments/assets/9965f399-0c6d-4ce9-adfd-f75903a81595)
@@ -93,7 +109,15 @@ cargo tauri android build
 ![Windows_ios_2](https://github.com/user-attachments/assets/1d45b543-b8c4-4961-8bff-4e1f97595e69)
 ![Windows_ios_3](https://github.com/user-attachments/assets/5da3d68b-dfef-430a-94ba-8b4d2e30631a)
 
+### Linux
+![Arch_Linux_1](https://github.com/user-attachments/assets/1c87cfc2-d9fd-4e09-8896-16a567aa3d71)
 
+### MacOS
+![macOS_1](https://github.com/user-attachments/assets/a61cc6cb-48cd-41b6-9e46-63af684666c2)
+![macOS_2](https://github.com/user-attachments/assets/c2e16ecd-f5dd-4dac-919a-88e8eda6bb40)
+
+
+### Android
 <div display="flex">
   <img src="https://github.com/user-attachments/assets/ee31d7b4-7f96-4547-b219-0e0be5cc1d8c" width="45%" alt="Android 1"/>
   <img src="https://github.com/user-attachments/assets/0cb94d66-51f4-4244-bf54-17467f3b006b" width="45%" alt="Android 2"/>
