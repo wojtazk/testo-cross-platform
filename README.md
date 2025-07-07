@@ -52,7 +52,7 @@ Ikona (GameBoy) (licencja: MIT) -> https://iconduck.com/icons/115336/game-boy-4
 
 generator ikon android / ios etc -> https://icon.kitchen/
 
-Piwo -> https://pixabay.com/photos/beer-beer-mug-foam-thirst-binge-3804654/
+Piwo (licencja: Pixabay Content License) -> https://pixabay.com/photos/beer-beer-mug-foam-thirst-binge-3804654/
 
 
 ## Uruchamianie aplikacji (development)
