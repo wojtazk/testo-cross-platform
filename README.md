@@ -48,7 +48,7 @@ Przejdź do [releases](https://github.com/wojtazk/testo-cross-platform/releases)
 
 
 ## Użyte obrazki
-Ikona (GameBoy) -> https://iconduck.com/icons/115336/game-boy-4
+Ikona (GameBoy) (licencja: MIT) -> https://iconduck.com/icons/115336/game-boy-4
 
 generator ikon android / ios etc -> https://icon.kitchen/
 
