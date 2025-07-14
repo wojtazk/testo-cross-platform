@@ -9,6 +9,10 @@ Projekt dedykuje [Rickowi](https://www.youtube.com/watch?v=dQw4w9WgXcQ) i [Ricki
 ![GitHub License](https://img.shields.io/github/license/wojtazk/testo-cross-platform)
 ![GitHub top language](https://img.shields.io/github/languages/top/wojtazk/testo-cross-platform)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wojtazk/testo-cross-platform)
+![GtiHub releases downloads](https://img.shields.io/github/downloads/wojtazk/testo-cross-platform/total)
+
+![GitHub Workflow - desktop builds status](https://img.shields.io/github/actions/workflow/status/wojtazk/testo-cross-platform/tauri-desktop-build.yaml?label=Desktop%20Builds)
+![GitHub workflow - android build status](https://img.shields.io/github/actions/workflow/status/wojtazk/testo-cross-platform/tauri-android-build.yaml?label=Android%20Build)
 
 ![Tauri](https://img.shields.io/badge/Framework-Tauri-FFC131?logo=tauri)
 ![Ionic](https://img.shields.io/badge/Framework-Ionic-3880FF?logo=ionic)
@@ -48,11 +52,9 @@ Przejdź do [releases](https://github.com/wojtazk/testo-cross-platform/releases)
 
 
 ## Użyte obrazki
-Ikona (GameBoy) (licencja: MIT) -> https://iconduck.com/icons/115336/game-boy-4
-
-generator ikon android / ios etc -> https://icon.kitchen/
-
-Piwo (licencja: Pixabay Content License) -> https://pixabay.com/photos/beer-beer-mug-foam-thirst-binge-3804654/
+- Ikona (GameBoy) (licencja: `MIT`) -> https://iconduck.com/icons/115336/game-boy-4
+  - generator ikon android / ios etc -> https://icon.kitchen/
+- Piwo (licencja: `Pixabay Content License`) -> https://pixabay.com/photos/beer-beer-mug-foam-thirst-binge-3804654/
 
 
 ## Uruchamianie aplikacji (development)
