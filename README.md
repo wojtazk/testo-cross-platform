@@ -6,21 +6,24 @@
 
 Projekt dedykuje [Rickowi](https://www.youtube.com/watch?v=dQw4w9WgXcQ) i [Rickiemu](https://www.youtube.com/watch?v=BJJeE56rhck) ❤️❤️❤️
 
-![GitHub License](https://img.shields.io/github/license/wojtazk/testo-cross-platform)
-![GitHub top language](https://img.shields.io/github/languages/top/wojtazk/testo-cross-platform)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wojtazk/testo-cross-platform)
-![GtiHub releases downloads](https://img.shields.io/github/downloads/wojtazk/testo-cross-platform/total)
-
-![GitHub Workflow - desktop builds status](https://img.shields.io/github/actions/workflow/status/wojtazk/testo-cross-platform/tauri-desktop-build.yaml?label=Desktop%20Builds)
-![GitHub workflow - android build status](https://img.shields.io/github/actions/workflow/status/wojtazk/testo-cross-platform/tauri-android-build.yaml?label=Android%20Build)
-
 ![Tauri](https://img.shields.io/badge/Framework-Tauri-FFC131?logo=tauri)
 ![Ionic](https://img.shields.io/badge/Framework-Ionic-3880FF?logo=ionic)
 ![Vite](https://img.shields.io/badge/Build-Vite-646CFF?logo=vite)
 ![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react)
 
-![GitHub forks](https://img.shields.io/github/forks/wojtazk/testo-cross-platform?logoColor=blue&style=social)
-![GitHub Repo stars](https://img.shields.io/github/stars/wojtazk/testo-cross-platform?style=social)
+![GitHub License](https://img.shields.io/github/license/wojtazk/testo-cross-platform)
+![GitHub top language](https://img.shields.io/github/languages/top/wojtazk/testo-cross-platform)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wojtazk/testo-cross-platform)
+![GtiHub releases downloads](https://img.shields.io/github/downloads/wojtazk/testo-cross-platform/total)
+
+<br>
+
+![GitHub Workflow - desktop builds status](https://img.shields.io/github/actions/workflow/status/wojtazk/testo-cross-platform/tauri-desktop-build.yaml?label=Desktop%20Builds&logo=githubactions)
+![GitHub workflow - android build status](https://img.shields.io/github/actions/workflow/status/wojtazk/testo-cross-platform/tauri-android-build.yaml?label=Android%20Build&logo=githubactions)
+
+
+<!-- ![GitHub forks](https://img.shields.io/github/forks/wojtazk/testo-cross-platform?logoColor=blue&style=social)
+![GitHub Repo stars](https://img.shields.io/github/stars/wojtazk/testo-cross-platform?style=social) -->
 
 
 ## Instalacja
