@@ -10,10 +10,19 @@ import {
   IonRadio,
   IonRadioGroup,
   IonRange,
+  IonText,
 } from '@ionic/react';
 
+import { openUrl } from '@tauri-apps/plugin-opener';
+
 import React, { useRef } from 'react';
-import { hardwareChipOutline, text } from 'ionicons/icons';
+import {
+  codeDownloadOutline,
+  codeOutline,
+  hardwareChipOutline,
+  logoGithub,
+  text,
+} from 'ionicons/icons';
 
 import { useAppContext } from '../AppContext';
 
@@ -42,6 +51,7 @@ export const Settings: React.FC = () => {
     setZoom,
     fontSize,
     setFontSize,
+    latesAppRelease,
   } = useAppContext();
 
   // quiz settings
@@ -92,6 +102,9 @@ export const Settings: React.FC = () => {
       removeUIMode();
     } else setUIMode(newUIMode);
   };
+
+  // current app version
+  const currentAppVerion = useRef<string>(__APP_VERSION__);
 
   return (
     <>
@@ -265,6 +278,53 @@ export const Settings: React.FC = () => {
         </IonItem>
         <IonItem>
           <IonLabel>Never gonna give you up, Never gonna let you down</IonLabel>
+        </IonItem>
+      </IonList>
+
+      <IonListHeader>O aplikacji</IonListHeader>
+      <IonList inset>
+        <IonItem>
+          <IonIcon slot="start" icon={codeOutline}></IonIcon>
+          <IonLabel>
+            Obecna wersja:{' '}
+            <IonText color="primary">{currentAppVerion.current}</IonText>
+          </IonLabel>
+        </IonItem>
+        {latesAppRelease &&
+          latesAppRelease.version !== currentAppVerion.current && (
+            <IonItem>
+              <IonIcon slot="start" icon={codeDownloadOutline}></IonIcon>
+              <IonLabel>
+                Najnowsza wersja:{' '}
+                <IonText color="primary">{latesAppRelease.version}</IonText>
+              </IonLabel>
+              <IonButton
+                slot="end"
+                color="primary"
+                fill="outline"
+                size="small"
+                onClick={() => {
+                  openUrl(latesAppRelease.html_url);
+                }}
+              >
+                Pobierz
+              </IonButton>
+            </IonItem>
+          )}
+        <IonItem>
+          <IonIcon slot="start" icon={logoGithub}></IonIcon>
+          <IonLabel>
+            Kod źródłowy:{' '}
+            <IonText
+              color="primary"
+              style={{ textDecoration: 'none', cursor: 'pointer' }}
+              onClick={() => {
+                openUrl('https://github.com/wojtazk/testo-cross-platform/');
+              }}
+            >
+              github.com/wojtazk/testo-cross-platform
+            </IonText>
+          </IonLabel>
         </IonItem>
       </IonList>
 

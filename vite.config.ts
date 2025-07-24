@@ -6,6 +6,9 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  },
 
   // prevent vite from obscuring rust errors
   clearScreen: false,

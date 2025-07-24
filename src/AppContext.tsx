@@ -6,6 +6,7 @@ import { toggleIonDarkPalette } from './utils/toggleIonDarkPalette';
 import { useAppZoom } from './utils/useAppZoom';
 import { useAppFontSize } from './utils/useAppFontSize';
 import { useQuizState } from './utils/useQuizState';
+import { useLatestAppRelease } from './utils/useLatestAppRelease';
 
 // types
 import { QuizReps } from './utils/useQuizSettings';
@@ -14,6 +15,7 @@ import { Zoom } from './utils/useAppZoom';
 import { FontSize } from './utils/useAppFontSize';
 import { QuizState, QuizStateDispatchAction } from './utils/useQuizState';
 import { useRecentyUsed } from './utils/useRecentlyUsed';
+import { GitHubRelease } from './utils/useLatestAppRelease';
 
 // app context types
 export type AppContextValues = {
@@ -38,6 +40,7 @@ export type AppContextValues = {
   dispatchQuizState: React.ActionDispatch<[action: QuizStateDispatchAction]>;
   recentlyUsed: string[];
   addRecentlyUsed: (location: string) => void;
+  latesAppRelease: GitHubRelease;
 };
 
 // context
@@ -71,6 +74,9 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
   // recentrly used
   const { recentlyUsed, addRecentlyUsed } = useRecentyUsed();
 
+  // latest GitHub release
+  const { latesAppRelease } = useLatestAppRelease();
+
   return (
     <AppContext.Provider
       value={{
@@ -95,6 +101,7 @@ export const AppContextProvider = ({ children }: React.PropsWithChildren) => {
         dispatchQuizState,
         recentlyUsed,
         addRecentlyUsed,
+        latesAppRelease,
       }}
     >
       {children}
