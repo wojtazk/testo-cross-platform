@@ -64,35 +64,48 @@ Przejdź do [releases](https://github.com/wojtazk/testo-cross-platform/releases)
 > [!NOTE] 
 > Poczytej se dokumentacje: https://v2.tauri.app/
 
-Zainstaluj wszystkie wymagane rzeczy do Tauri:
-https://v2.tauri.app/start/prerequisites/
+1. Zainstaluj wszystkie wymagane rzeczy do Tauri: 
+    https://v2.tauri.app/start/prerequisites/
+1. Zainstaluj zależności `npm` oraz `tauri-cli`
 
-<br/>
-
-Zainstaluj pakiety NPM oraz tauri-cli
-```sh
-npm install
-cargo install tauri-cli --version "^2.0.0" --locked
-```
-<!-- cargo tauri android init
-cargo tauri icon ./public/favicon.svg --ios-color "#555" -->
-
-<br/>
-
-Uruchom apke (Desktop)
-```sh
-cargo tauri dev
-```
-Uruchom apke (Android)
-```sh
-cargo tauri android dev
-```
+   ```sh
+    npm install
+    ```
+     ```sh
+    cargo install tauri-cli --version "^2.0.0" --locked
+    ```
+    <!-- cargo tauri android init
+    cargo tauri icon ./public/favicon.svg --ios-color "#555" -->
+1. Możesz zaktualizować biblioteki itd [opcjonalnie]
+    ```sh
+    npm update
+    ```
+    ```sh
+    rustup update
+    ```
+    ```sh
+    cd src-tauri/ && cargo update
+    ```
+1. Uruchom apke (Desktop)
+    ```sh
+    cargo tauri dev
+    ```
+1. Uruchom apke (Android)
+    ```sh
+    cargo tauri android dev
+    ```
 
 ## Budowanie aplikacji
-Desktop:
-```sh
-cargo tauri build
-```
+Desktop: 
+- Bez instalatorów
+
+  ```sh
+  cargo tauri build --no-bundle
+  ```
+- Z instalatorami
+  ```sh
+  cargo tauri build
+  ```
 Android:
 ```sh
 cargo tauri android build
