@@ -136,10 +136,17 @@ cargo tauri android build
 
 
 ### Android
+
 <div display="flex">
-  <img src="https://github.com/user-attachments/assets/ee31d7b4-7f96-4547-b219-0e0be5cc1d8c" width="45%" alt="Android 1"/>
-  <img src="https://github.com/user-attachments/assets/0cb94d66-51f4-4244-bf54-17467f3b006b" width="45%" alt="Android 2"/>
-  <img src="https://github.com/user-attachments/assets/d28e6bdc-5789-4d66-8b43-0db364c74185" width="45%" alt="Android 3"/>
-  <img src="https://github.com/user-attachments/assets/84d595e3-7f14-4f28-baed-3e7643c0f250" width="45%" alt="Android 4"/>
+  <img width="45%" alt="Android 1" src="https://github.com/user-attachments/assets/717ee0e9-ceca-4667-b0d6-3733c97e3c80" />
+  <img width="45%" alt="Android 2" src="https://github.com/user-attachments/assets/c3675a42-706b-4243-85bb-8ae052ddc284" />
+  <img width="45%" alt="Android 3" src="https://github.com/user-attachments/assets/2bec5e43-7e7a-471d-bc2c-0bcf6907b54a" />
+<!--   <img width="45%" alt="Android 1" src="https://github.com/user-attachments/assets/ee31d7b4-7f96-4547-b219-0e0be5cc1d8c"/> -->
+  <img width="45%" alt="Android 4" src="https://github.com/user-attachments/assets/f8bb89b2-7d8d-4a48-970c-9865cf649f57" />
+  <img width="45%" alt="Android 5" src="https://github.com/user-attachments/assets/0cb94d66-51f4-4244-bf54-17467f3b006b"/>
+<!--   <img src="https://github.com/user-attachments/assets/d28e6bdc-5789-4d66-8b43-0db364c74185" width="45%" alt="Android 3"/> -->
+  <img width="45%" alt="Android 6" src="https://github.com/user-attachments/assets/127f4f6d-4a7c-4eb1-a88f-c2aca85ab65f" />
+  <img width="45%" alt="Android 7" src="https://github.com/user-attachments/assets/3fe06b58-0cbb-4c91-ad6f-fd1405a292ec" />
+  <img width="45%" alt="Android 5" src="https://github.com/user-attachments/assets/84d595e3-7f14-4f28-baed-3e7643c0f250"/>
 </div>
 
