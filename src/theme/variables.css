@@ -31,6 +31,13 @@ ion-list {
   padding: 0 !important;
 }
 
+/* match accordion toggle icon styles with item detail icon */
+.ion-accordion-toggle-icon {
+  color: var(--detail-icon-color);
+  font-size: var(--detail-icon-font-size);
+  opacity: var(--detail-icon-opacity);
+}
+
 /* set background of progress bar color to be mixed with black or white */
 ion-progress-bar {
   --background: color-mix(in srgb, var(--progress-background) 40%, white);

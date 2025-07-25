@@ -18,20 +18,35 @@ import {
   IonProgressBar,
   IonNote,
   IonText,
+  IonInput,
+  IonAccordionGroup,
+  IonAccordion,
+  IonSpinner,
 } from '@ionic/react';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { open } from '@tauri-apps/plugin-dialog';
+import { open, message } from '@tauri-apps/plugin-dialog';
 import { type } from '@tauri-apps/plugin-os';
-import { documentDir } from '@tauri-apps/api/path';
-import { readDir } from '@tauri-apps/plugin-fs';
+import { documentDir, join } from '@tauri-apps/api/path';
+import {
+  readDir,
+  exists,
+  mkdir,
+  open as openFile,
+  readFile,
+} from '@tauri-apps/plugin-fs';
+import { path } from '@tauri-apps/api';
 
 import {
+  addOutline,
+  chevronDownOutline,
   cog,
+  createOutline,
+  documentsOutline,
   folderOpenOutline,
   folderOutline,
   settingsOutline,
@@ -53,7 +68,7 @@ const isMobile = ['ios', 'android'].includes(currentOS);
 
 const Home: React.FC = () => {
   const [quizDir, setQuizDir] = useState('');
-  const [quizDirEntries, setQuizDieEntries] = useState<string[]>();
+  const [quizDirEntries, setQuizDirEntries] = useState<string[]>();
   useEffect(() => {
     if (!isMobile) return;
 
@@ -66,7 +81,7 @@ const Home: React.FC = () => {
         : undefined;
 
       setQuizDir(quizDir);
-      setQuizDieEntries(quizDirEntries);
+      setQuizDirEntries(quizDirEntries);
     })();
   }, []);
 
@@ -104,17 +119,95 @@ const Home: React.FC = () => {
   // handle quiz openig
   const loadQuizData = useLoadQuizData();
   // handle picking dirs (Desktop only)
-  const openQuizDirectory = async (defaultPath: string = '') => {
+  const openQuizDirectory = useCallback(
+    async (defaultPath: string = '') => {
+      const selected = await open({
+        directory: true,
+        multiple: false,
+        defaultPath,
+      });
+
+      if (!selected) return;
+
+      loadQuizData(selected);
+    },
+    [loadQuizData]
+  );
+  // add new quiz (Android only)
+  const accordionGroupElement = useRef<HTMLIonAccordionGroupElement>(null);
+  const newQuizNameInputElement = useRef<HTMLIonInputElement>(null);
+  const [addingQuiz, setAddingQuiz] = useState(false);
+  const addNewQuiz = useCallback(async (defaultPath: string = '') => {
+    // check if new quiz name is set
+    if (!newQuizNameInputElement.current?.value) {
+      newQuizNameInputElement.current?.setFocus();
+      return;
+    }
+
+    const newQuizDir = String(newQuizNameInputElement.current.value);
+
+    // check if the new dir name is unique
+    const quizDir = await documentDir();
+    const dirExists = await exists(await join(quizDir, newQuizDir));
+    if (dirExists) {
+      await message('Taki katalog już istnieje', { kind: 'error' });
+      return;
+    }
+
+    // update UI
+    setAddingQuiz(true);
+    if (accordionGroupElement.current) {
+      accordionGroupElement.current.value = undefined;
+    }
+
+    // select files dialog
     const selected = await open({
-      directory: true,
-      multiple: false,
+      directory: false,
+      multiple: true,
       defaultPath,
     });
-
     if (!selected) return;
 
-    loadQuizData(selected);
-  };
+    console.time('adding new quiz');
+    // create the new dir
+    await mkdir(`${quizDir}/${newQuizDir}`);
+
+    // copy selected files to quizDir
+    await Promise.all(
+      selected.map(async (contentURI) => {
+        const fileName = await path.basename(contentURI);
+
+        // god, I hate content URIs
+        // read URI contents
+        const fileContent = await readFile(contentURI);
+        // create a new file & write contents
+        const file = await openFile(`${quizDir}/${newQuizDir}/${fileName}`, {
+          write: true,
+          create: true,
+        });
+        await file.write(fileContent);
+        return await file.close();
+      })
+    );
+
+    // update list of quizes
+    setQuizDir(quizDir);
+    setQuizDirEntries(
+      (await readDir(quizDir))
+        .filter((entry) => entry.isDirectory)
+        .map((entry) => entry.name)
+    );
+    console.timeEnd('adding new quiz');
+
+    // reset the new quiz name input
+    newQuizNameInputElement.current.value = '';
+
+    // update UI
+    setAddingQuiz(false);
+
+    // await message('Dodano nowy quiz', { kind: 'info' });
+    return;
+  }, []);
   // handle dragged dirs
   useEffect(() => {
     if (draggedPath === '') return;
@@ -197,6 +290,7 @@ const Home: React.FC = () => {
             {React.useMemo(
               () => (
                 <>
+                  {/* Desktop */}
                   {!isMobile && (
                     <IonCol ref={dropZoneElementRef}>
                       <IonListHeader>Otwórz Quiz</IonListHeader>
@@ -213,40 +307,115 @@ const Home: React.FC = () => {
                       </IonList>
                     </IonCol>
                   )}
+                  {/* Mobile */}
                   {isMobile && (
-                    <IonCol>
-                      <IonListHeader>Twoje Quizy</IonListHeader>
-                      <IonNote>
-                        <div className="ion-margin-horizontal">
-                          Umieść w katalogu:
-                          <br />
-                          <IonText color="primary">
-                            {quizDir.slice(quizDir.indexOf('/Android/'))}
-                          </IonText>
-                        </div>
-                      </IonNote>
+                    <>
+                      <IonCol>
+                        <IonListHeader>Twoje Quizy</IonListHeader>
+                        <IonNote>
+                          <div className="ion-margin-horizontal">
+                            Znajdują się w katalogu:
+                            <br />
+                            <IonText color="primary">
+                              {quizDir.slice(quizDir.indexOf('/Android/'))}
+                            </IonText>
+                          </div>
+                        </IonNote>
 
-                      <IonList inset>
-                        {quizDirEntries?.map((dirName, index) => (
-                          <IonItem
-                            button
-                            detail
-                            key={index}
-                            onClick={() =>
-                              loadQuizData(`${quizDir}/${dirName}`)
-                            }
+                        {/* Add new Quiz */}
+                        <IonList inset lines="none">
+                          <IonAccordionGroup
+                            ref={accordionGroupElement}
+                            expand="compact"
                           >
-                            <IonIcon icon={folderOutline} slot="start" />
-                            <IonLabel>{dirName}</IonLabel>
-                          </IonItem>
-                        ))}
-                      </IonList>
-                    </IonCol>
+                            <IonAccordion
+                              value="add-quiz"
+                              disabled={addingQuiz}
+                            >
+                              <IonItem
+                                slot="header"
+                                button
+                                aria-label="dodaj quiz"
+                              >
+                                {addingQuiz ? (
+                                  <IonSpinner slot="start" color="medium" />
+                                ) : (
+                                  <IonIcon icon={addOutline} slot="start" />
+                                )}
+                                <IonLabel>
+                                  {addingQuiz ? 'Kopiowanie' : 'Dodaj Quiz'}
+                                </IonLabel>
+                                <IonIcon
+                                  slot="end"
+                                  icon={chevronDownOutline}
+                                  className="ion-accordion-toggle-icon"
+                                />
+                              </IonItem>
+                              <div slot="content">
+                                <IonItem>
+                                  <IonIcon icon={createOutline} slot="start" />
+                                  <IonInput
+                                    label="Nazwa"
+                                    aria-label="nazwa katalogu"
+                                    labelPlacement="stacked"
+                                    clearInput
+                                    placeholder="kolejny_wartościowy_przedmiot"
+                                    required
+                                    ref={newQuizNameInputElement}
+                                    onIonChange={(event) => {
+                                      if (newQuizNameInputElement.current) {
+                                        newQuizNameInputElement.current.value =
+                                          String(event.target.value).trim();
+                                      }
+                                    }}
+                                  ></IonInput>
+                                </IonItem>
+                                <IonItem
+                                  button
+                                  detail
+                                  aria-label="wybierz pliki quizu"
+                                  onClick={addNewQuiz.bind(null, '')}
+                                >
+                                  <IonIcon
+                                    icon={documentsOutline}
+                                    slot="start"
+                                  />
+                                  <IonLabel>Wybierz wszystkie pliki</IonLabel>
+                                </IonItem>
+                              </div>
+                            </IonAccordion>
+                          </IonAccordionGroup>
+                        </IonList>
+
+                        {/* Quiz Dirs */}
+                        <IonList inset>
+                          {quizDirEntries?.map((dirName, index) => (
+                            <IonItem
+                              button
+                              detail
+                              key={index}
+                              onClick={() =>
+                                loadQuizData(`${quizDir}/${dirName}`)
+                              }
+                            >
+                              <IonIcon icon={folderOutline} slot="start" />
+                              <IonLabel>{dirName}</IonLabel>
+                            </IonItem>
+                          ))}
+                        </IonList>
+                      </IonCol>
+                    </>
                   )}
                 </>
               ),
-              // eslint-disable-next-line react-hooks/exhaustive-deps
-              [isMobile, quizDir, quizDirEntries, loadQuizData]
+              [
+                quizDir,
+                quizDirEntries,
+                loadQuizData,
+                openQuizDirectory,
+                addingQuiz,
+                addNewQuiz,
+              ]
             )}
           </IonRow>
           <IonRow>

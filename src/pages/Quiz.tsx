@@ -223,8 +223,12 @@ const Quiz: React.FC = () => {
         >
           <IonContent>
             <IonList lines="full" onClick={closePopover}>
-              <IonItem button onClick={saveQuizProgress}>
-                <IonIcon slot="start" aria-hidden="true" icon={save} />
+              <IonItem
+                button
+                onClick={saveQuizProgress}
+                aria-label="zapisz stan"
+              >
+                <IonIcon slot="start" icon={save} />
                 <IonLabel>Zapisz stan</IonLabel>
               </IonItem>
               <IonItem
@@ -237,15 +241,15 @@ const Quiz: React.FC = () => {
                   });
                   history.push('/quiz/stats');
                 }}
+                aria-label="statystyki"
               >
-                <IonIcon slot="start" aria-hidden="true" icon={statsChart} />
+                <IonIcon slot="start" icon={statsChart} />
                 <IonLabel>Statystyki</IonLabel>
               </IonItem>
               {/* <IonItem button lines="none">
                 <IonIcon
                   color="danger"
                   slot="start"
-                  aria-hidden="true"
                   icon={trash}
                 />
                 <IonLabel color="danger">
