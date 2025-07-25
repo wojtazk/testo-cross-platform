@@ -1,6 +1,6 @@
 [package]
 name = "testo-cross-platform"
-version = "1.0.4"
+version = "1.1.0"
 description = "Wieloplatformowy testownik"
 authors = ["Wojciech Kowal"]
 license = "MIT"
