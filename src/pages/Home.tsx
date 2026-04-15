@@ -31,7 +31,7 @@ import { useHistory } from 'react-router-dom';
 
 import { open, message } from '@tauri-apps/plugin-dialog';
 import { type } from '@tauri-apps/plugin-os';
-import { documentDir, join } from '@tauri-apps/api/path';
+import { appDataDir, join } from '@tauri-apps/api/path';
 import {
   readDir,
   exists,
@@ -66,6 +66,11 @@ import { useLoadQuizData } from '../utils/useLoadQuizData';
 const currentOS = type();
 const isMobile = ['ios', 'android'].includes(currentOS);
 
+const getQuizBaseDir = async () => {
+  const base = await appDataDir();
+  return await join(base, 'testowniki');
+};
+
 const Home: React.FC = () => {
   const [quizDir, setQuizDir] = useState('');
   const [quizDirEntries, setQuizDirEntries] = useState<string[]>();
@@ -73,12 +78,11 @@ const Home: React.FC = () => {
     if (!isMobile) return;
 
     (async () => {
-      const quizDir = await documentDir();
-      const quizDirEntries = isMobile
-        ? (await readDir(quizDir))
-            .filter((entry) => entry.isDirectory)
-            .map((entry) => entry.name)
-        : undefined;
+      const quizDir = await getQuizBaseDir();
+      await mkdir(quizDir, { recursive: true }); // create the base quiz dir
+      const quizDirEntries = (await readDir(quizDir))
+        .filter((entry) => entry.isDirectory)
+        .map((entry) => entry.name);
 
       setQuizDir(quizDir);
       setQuizDirEntries(quizDirEntries);
@@ -131,7 +135,7 @@ const Home: React.FC = () => {
 
       loadQuizData(selected);
     },
-    [loadQuizData]
+    [loadQuizData],
   );
   // add new quiz (Android only)
   const accordionGroupElement = useRef<HTMLIonAccordionGroupElement>(null);
@@ -147,7 +151,7 @@ const Home: React.FC = () => {
     const newQuizDir = String(newQuizNameInputElement.current.value);
 
     // check if the new dir name is unique
-    const quizDir = await documentDir();
+    const quizDir = await getQuizBaseDir();
     const dirExists = await exists(await join(quizDir, newQuizDir));
     if (dirExists) {
       await message('Taki katalog już istnieje', { kind: 'error' });
@@ -187,7 +191,7 @@ const Home: React.FC = () => {
         });
         await file.write(fileContent);
         return await file.close();
-      })
+      }),
     );
 
     // update list of quizes
@@ -195,7 +199,7 @@ const Home: React.FC = () => {
     setQuizDirEntries(
       (await readDir(quizDir))
         .filter((entry) => entry.isDirectory)
-        .map((entry) => entry.name)
+        .map((entry) => entry.name),
     );
     console.timeEnd('adding new quiz');
 
@@ -316,9 +320,7 @@ const Home: React.FC = () => {
                           <div className="ion-margin-horizontal">
                             Znajdują się w katalogu:
                             <br />
-                            <IonText color="primary">
-                              {quizDir.slice(quizDir.indexOf('/Android/'))}
-                            </IonText>
+                            <IonText color="primary">{quizDir}</IonText>
                           </div>
                         </IonNote>
 
@@ -415,7 +417,7 @@ const Home: React.FC = () => {
                 openQuizDirectory,
                 addingQuiz,
                 addNewQuiz,
-              ]
+              ],
             )}
           </IonRow>
           <IonRow>
