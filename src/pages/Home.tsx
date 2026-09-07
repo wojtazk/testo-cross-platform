@@ -27,7 +27,7 @@ import {
 import React, { useCallback } from 'react';
 
 import { useState, useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { open, message } from '@tauri-apps/plugin-dialog';
 import { type } from '@tauri-apps/plugin-os';
@@ -89,11 +89,11 @@ const Home: React.FC = () => {
     })();
   }, []);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const { quizState } = useAppContext();
 
   // ion modal setup
-  const modalRef = useRef<HTMLIonModalElement>(null);
+  const modalRef = useRef<React.ComponentRef<typeof IonModal>>(null);
   const pageRef = useRef(null);
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
@@ -138,8 +138,8 @@ const Home: React.FC = () => {
     [loadQuizData],
   );
   // add new quiz (Android only)
-  const accordionGroupElement = useRef<HTMLIonAccordionGroupElement>(null);
-  const newQuizNameInputElement = useRef<HTMLIonInputElement>(null);
+  const accordionGroupElement = useRef<React.ComponentRef<typeof IonAccordionGroup>>(null);
+  const newQuizNameInputElement = useRef<React.ComponentRef<typeof IonInput>>(null);
   const [addingQuiz, setAddingQuiz] = useState(false);
   const addNewQuiz = useCallback(async (defaultPath: string = '') => {
     // check if new quiz name is set
@@ -271,10 +271,10 @@ const Home: React.FC = () => {
                     button
                     detail
                     aria-label="kontynuuj quiz"
-                    onClick={() => history.push('/quiz')}
+                    onClick={() => navigate('/quiz')}
                   >
                     <IonIcon icon={folderOpenOutline} slot="start" />
-                    <IonLabel class="text-nowrap">
+                    <IonLabel className="text-nowrap">
                       {quizState.saveJSON.location}
                     </IonLabel>
                   </IonItem>
@@ -437,7 +437,7 @@ const Home: React.FC = () => {
                       }
                     >
                       <IonIcon icon={folderOutline} slot="start" />
-                      <IonLabel class="text-nowrap">
+                      <IonLabel className="text-nowrap">
                         {isMobile
                           ? quizDir.slice(quizDir.lastIndexOf('/') + 1)
                           : quizDir}

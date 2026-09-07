@@ -23,6 +23,13 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      // eslint-plugin-react-hooks v7 added the React Compiler rules to its
+      // recommended config. They flag pre-existing patterns in this codebase
+      // (refs read during render, Date.now() in render). Kept as warnings so
+      // the signal stays visible without blocking lint. Address separately.
+      'react-hooks/refs': 'warn',
+      'react-hooks/purity': 'warn',
+      'react-hooks/immutability': 'warn',
     },
   },
 )

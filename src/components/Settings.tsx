@@ -56,19 +56,19 @@ export const Settings: React.FC = () => {
 
   // quiz settings
   // controlled inputs with ionic and react ... I hope that I am really dumb
-  const quizInitialRepsIonInputElement = useRef<HTMLIonInputElement>(null);
+  const quizInitialRepsIonInputElement = useRef<React.ComponentRef<typeof IonInput>>(null);
   const quizWrongAnswerExtraRepsIonInputElement =
-    useRef<HTMLIonInputElement>(null);
-  const quizMaxRepsIonInputElement = useRef<HTMLIonInputElement>(null);
+    useRef<React.ComponentRef<typeof IonInput>>(null);
+  const quizMaxRepsIonInputElement = useRef<React.ComponentRef<typeof IonInput>>(null);
 
   const handleQuizValuesChange = (
     value: number,
     setValue: React.Dispatch<React.SetStateAction<QuizReps>>,
-    inputRef: React.RefObject<HTMLIonInputElement | null>,
+    inputRef: React.RefObject<React.ComponentRef<typeof IonInput> | null>,
     min: number,
     max: number
   ): void => {
-    let newValue: number = NaN;
+    let newValue: number;
 
     if (value < min) {
       setValue(min);
@@ -209,7 +209,7 @@ export const Settings: React.FC = () => {
       </IonList>
 
       <IonListHeader>Styl Aplikacji</IonListHeader>
-      <IonNote class="ion-margin-horizontal">
+      <IonNote className="ion-margin-horizontal">
         Uruchom ponownie aplikację aby zobaczyć efekt
       </IonNote>
       <IonList inset>
@@ -233,7 +233,7 @@ export const Settings: React.FC = () => {
       </IonList>
 
       <IonListHeader>Skala aplikacji</IonListHeader>
-      <IonNote class="ion-margin">{Math.round(zoom * 100)}%</IonNote>
+      <IonNote className="ion-margin">{Math.round(zoom * 100)}%</IonNote>
       <IonList inset>
         <IonItem>
           <IonRange
@@ -260,7 +260,7 @@ export const Settings: React.FC = () => {
       </IonList>
 
       <IonListHeader>Rozmiar Tekstu</IonListHeader>
-      <IonNote class="ion-margin">{Math.round(fontSize * 100)}%</IonNote>
+      <IonNote className="ion-margin">{Math.round(fontSize * 100)}%</IonNote>
       <IonList inset>
         <IonItem>
           <IonRange

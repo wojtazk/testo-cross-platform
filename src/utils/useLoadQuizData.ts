@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useAppContext } from '../AppContext';
 import { handleLoadQuizData } from './handleLoadQuizData';
 import { QuizState } from './useQuizState';
@@ -10,7 +10,7 @@ import { ask } from '@tauri-apps/plugin-dialog';
 export const useLoadQuizData = () => {
   const { quizInitialReps, dispatchQuizState, addRecentlyUsed } =
     useAppContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return React.useCallback(
     async (path: string) => {
@@ -32,12 +32,12 @@ export const useLoadQuizData = () => {
             payload: quizData as QuizState,
           });
 
-          history.push('/quiz');
+          navigate('/quiz');
         }
       );
 
       addRecentlyUsed(path);
     },
-    [quizInitialReps, dispatchQuizState, history, addRecentlyUsed]
+    [quizInitialReps, dispatchQuizState, navigate, addRecentlyUsed]
   );
 };

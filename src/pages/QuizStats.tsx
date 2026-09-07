@@ -12,9 +12,9 @@ import {
   IonNote,
   IonLabel,
   IonText,
+  useIonRouter,
 } from '@ionic/react';
 import { useState } from 'react';
-import { useHistory } from 'react-router';
 import {
   chevronBack,
   arrowBack,
@@ -29,7 +29,7 @@ import { useAppContext } from '../AppContext';
 import { convertMsToTimeString } from '../utils/useTimer';
 
 const QuizStats: React.FC = () => {
-  const history = useHistory();
+  const router = useIonRouter();
   const { saveJSON } = useAppContext().quizState;
 
   const [answersSum] = useState(
@@ -65,7 +65,7 @@ const QuizStats: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton onClick={() => history.goBack()}>
+            <IonButton onClick={() => router.goBack()}>
               <IonIcon slot="icon-only" ios={chevronBack} md={arrowBack} />
             </IonButton>
           </IonButtons>

@@ -16,7 +16,7 @@ export const AnswersY: React.FC<{
   checkAnswersRef: React.RefObject<boolean>;
   userAnswersRef: React.RefObject<number[]>;
 }> = React.memo(({ labels, answers, checkAnswersRef, userAnswersRef }) => {
-  const answerElementRef = useRef<(HTMLIonListElement | null)[]>([]);
+  const answerElementRef = useRef<(React.ComponentRef<typeof IonList> | null)[]>([]);
   answerElementRef.current.forEach((el) => {
     if (!el) return;
     el.classList.remove('selected', 'correct', 'wrong');
@@ -45,7 +45,7 @@ export const AnswersY: React.FC<{
         <IonList
           inset
           lines="none"
-          class="wrong" // initial value
+          className="wrong" // initial value
           ref={(el) => {
             answerElementRef.current[index] = el;
           }}
@@ -97,7 +97,7 @@ export const AnswersY: React.FC<{
           </IonItem>
         </IonList>
 
-        <IonNote class="ion-margin">
+        <IonNote className="ion-margin">
           Poprawna: <span>{answer.content[answer.correct]}</span>
         </IonNote>
       </div>

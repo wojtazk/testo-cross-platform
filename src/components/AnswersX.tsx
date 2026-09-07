@@ -10,7 +10,7 @@ export const AnswersX: React.FC<{
 }> = React.memo(({ answers, checkAnswersRef, userAnswersRef }) => {
   // const userSelection;
 
-  const answerElementRef = useRef<(HTMLIonListElement | null)[]>([]);
+  const answerElementRef = useRef<(React.ComponentRef<typeof IonList> | null)[]>([]);
   answerElementRef.current.forEach((el) => el?.classList.remove('selected'));
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export const AnswersX: React.FC<{
       <IonList
         inset
         lines="none"
-        class={answer.correct ? 'correct' : 'wrong'}
+        className={answer.correct ? 'correct' : 'wrong'}
         ref={(el) => {
           answerElementRef.current[index] = el;
         }}

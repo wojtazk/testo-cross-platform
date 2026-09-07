@@ -71,9 +71,9 @@ const App: React.FC = () => {
       <AppContextProvider>
         <IonReactRouter>
           <IonRouterOutlet animated>
-            <Route exact path="/" render={() => <Home />} />
-            <Route exact path="/quiz" render={() => <Quiz />} />
-            <Route exact path="/quiz/stats" render={() => <QuizStats />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/quiz/stats" element={<QuizStats />} />
           </IonRouterOutlet>
         </IonReactRouter>
       </AppContextProvider>

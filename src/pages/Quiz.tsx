@@ -18,10 +18,11 @@ import {
   IonChip,
   IonFooter,
   IonText,
+  useIonRouter,
 } from '@ionic/react';
 import React, { useEffect } from 'react';
 import { useRef, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import {
   arrowBack,
   chevronBack,
@@ -51,10 +52,11 @@ const PIWO = {
 };
 
 const Quiz: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const router = useIonRouter();
 
   // popover menu
-  const popoverElement = useRef<HTMLIonPopoverElement>(null);
+  const popoverElement = useRef<React.ComponentRef<typeof IonPopover>>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const openPopover = (e: React.MouseEvent | React.TouchEvent) => {
@@ -77,8 +79,8 @@ const Quiz: React.FC = () => {
     Array(currentQuestionRef.current.answers.length).fill(-1)
   );
 
-  const answersElementRef = useRef<HTMLIonRowElement>(null);
-  const quizContentElementRef = useRef<HTMLIonContentElement>(null);
+  const answersElementRef = useRef<React.ComponentRef<typeof IonRow>>(null);
+  const quizContentElementRef = useRef<React.ComponentRef<typeof IonContent>>(null);
 
   const checkAnswersRef = useRef<boolean>(false);
   const [loadNewQuestion, setLoadNewQuestion] = useState(false);
@@ -188,7 +190,7 @@ const Quiz: React.FC = () => {
                   type: 'UPDATE_TIMER',
                   payload: timerRef.current,
                 });
-                history.goBack();
+                router.goBack();
               }}
             >
               <IonIcon slot="icon-only" ios={chevronBack} md={arrowBack} />
@@ -239,7 +241,7 @@ const Quiz: React.FC = () => {
                     type: 'UPDATE_TIMER',
                     payload: timerRef.current,
                   });
-                  history.push('/quiz/stats');
+                  navigate('/quiz/stats');
                 }}
                 aria-label="statystyki"
               >
@@ -260,11 +262,11 @@ const Quiz: React.FC = () => {
           </IonContent>
         </IonPopover>
       </IonHeader>
-      <IonContent ref={quizContentElementRef} class="animate">
+      <IonContent ref={quizContentElementRef} className="animate">
         <IonGrid fixed>
           <IonRow
             id="question-header"
-            class="ion-text-center ion-justify-content-center"
+            className="ion-text-center ion-justify-content-center"
           >
             <IonCol size="small" style={{ fontSize: '90%' }}>
               <Timer timerRef={timerRef} />
@@ -272,7 +274,7 @@ const Quiz: React.FC = () => {
           </IonRow>
 
           <IonRow id="question-content">
-            <IonCol class="ion-margin">
+            <IonCol className="ion-margin">
               <IonLabel>
                 {React.useMemo(
                   () => (
@@ -310,7 +312,7 @@ const Quiz: React.FC = () => {
           <IonRow
             ref={answersElementRef}
             id="question-answers"
-            class="ion-padding-horizontal ion-margin-bottom"
+            className="ion-padding-horizontal ion-margin-bottom"
           >
             <IonCol>
               {React.useMemo(
@@ -363,7 +365,7 @@ const Quiz: React.FC = () => {
 
           <IonRow
             id="question-buttons"
-            class="ion-margin-top ion-padding-horizontal ion-justify-content-end"
+            className="ion-margin-top ion-padding-horizontal ion-justify-content-end"
           >
             {currentQuestionRef.current !== PIWO && (
               <IonCol sizeLg="5">
@@ -394,7 +396,7 @@ const Quiz: React.FC = () => {
       </IonContent>
 
       <IonFooter id="quiz-footer">
-        <IonToolbar class="ion-text-center">
+        <IonToolbar className="ion-text-center">
           <IonChip>
             <IonLabel>{currentQuestionRef.current.tag}</IonLabel>
           </IonChip>

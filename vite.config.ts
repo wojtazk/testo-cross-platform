@@ -23,10 +23,15 @@ export default defineConfig({
   envPrefix: ['VITE_', 'TAURI_ENV_*'],
   build: {
     // Tauri uses Chromium on Windows and WebKit on macOS and Linux
+    // Ionic 9 raised its browser baseline to Safari/iOS 16 and Chrome 89,
+    // so the old safari13 target can no longer be transpiled down to.
     target:
-      process.env.TAURI_ENV_PLATFORM == 'windows' ? 'chrome105' : 'safari13',
+      process.env.TAURI_ENV_PLATFORM == 'windows' ? 'chrome105' : 'safari16',
     // don't minify for debug builds
     minify: !process.env.TAURI_ENV_DEBUG ? 'esbuild' : false,
+    // Vite 8 defaults CSS minification to lightningcss, which rejects the
+    // :host-context() selector Ionic's stylesheets rely on. Keep esbuild.
+    cssMinify: 'esbuild',
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
   },
